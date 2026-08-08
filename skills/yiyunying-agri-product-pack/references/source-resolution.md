@@ -34,3 +34,16 @@ Return stable ID, exact model, category, configuration, public parameters,
 packing, internal pricing status, material matches, source and validation issues.
 Do not silently choose between duplicate or similarly named products.
 
+## Plausibility gates
+
+- Parse units before comparing dimensions or weights. A bare `3.2*1.6*2.45`
+  is commonly metres, while `1840*1520*1050` is commonly millimetres; retain
+  the source text and expose the interpretation.
+- A reported gross/package weight lower than confirmed machine/net weight is a
+  hard conflict. Do not use it for freight inquiry, landed quote or booking.
+- Calculate outer-volume CBM from the stated dimensions. If it differs from the
+  reported/booking CBM by more than 10%, keep both values and stop booking until
+  the scope is confirmed. A current approved system CBM may still be used for a
+  preliminary freight inquiry when its source and caveat are recorded.
+- Product parameters, packing and logistics readiness are separate. A valid
+  EXW product price does not make unverified packing fit for CIF/DDP.

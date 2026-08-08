@@ -83,7 +83,35 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(updated["pricing"]["baseCny"], 120)
         self.assertEqual(applied, ["o1"])
 
+    def test_impossible_gross_weight_blocks_freight(self):
+        item = {
+            "id": "1",
+            "model": "T1",
+            "dimensions": {"packageSize": "3.2*1.6*2.45", "packageWeight": "200 kg", "packageCbm": 13},
+            "raw": {"attributes": {"weight": "1950kg"}},
+            "validation": {"status": "PARAM_OR_FREIGHT_TO_CONFIRM", "issues": ["MACHINE_WEIGHT_TO_CONFIRM"]},
+        }
+        row = catalog.normalized(item, include_internal=False)
+        self.assertEqual(row["packaging"]["netWeightKg"], "1950kg")
+        self.assertFalse(row["quality"]["freightInquiryReady"])
+        self.assertIn("REPORTED_GROSS_WEIGHT_LT_MACHINE_WEIGHT", row["quality"]["blockers"])
+
+    def test_cbm_mismatch_allows_inquiry_but_blocks_booking(self):
+        item = {
+            "id": "1",
+            "model": "M1",
+            "dimensions": {
+                "packageSize": "1840*1520*1050",
+                "packageWeight": "450 kg",
+                "machineWeight": "360 kg",
+                "packageCbm": 2.5,
+            },
+        }
+        row = catalog.normalized(item, include_internal=False)
+        self.assertTrue(row["quality"]["freightInquiryReady"])
+        self.assertFalse(row["quality"]["bookingReady"])
+        self.assertIn("REPORTED_CBM_DIFFERS_FROM_OUTER_DIMENSIONS", row["quality"]["warnings"])
+
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import re
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -45,9 +46,91 @@ def set_path(item: dict[str, Any], path: str, value: Any) -> None:
     target[parts[-1]] = value
 
 
+def number(value: Any) -> float | None:
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return float(value)
+    if not isinstance(value, str):
+        return None
+    match = re.search(r"[-+]?\d+(?:\.\d+)?", value.replace(",", ""))
+    return float(match.group()) if match else None
+
+
+def outer_cbm(value: Any) -> float | None:
+    if not isinstance(value, str):
+        return None
+    dimensions = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", value)]
+    if len(dimensions) < 3 or any(x <= 0 for x in dimensions[:3]):
+        return None
+    a, b, c = dimensions[:3]
+    unit = value.casefold()
+    if "mm" in unit or ("cm" not in unit and max(a, b, c) >= 100):
+        divisor = 1_000_000_000
+    elif "cm" in unit or ("mm" not in unit and max(a, b, c) > 10):
+        divisor = 1_000_000
+    else:
+        divisor = 1
+    return a * b * c / divisor
+
+
+def quality_checks(item: dict[str, Any], packaging: dict[str, Any]) -> dict[str, Any]:
+    blockers: list[str] = []
+    warnings: list[str] = []
+    catalog_issues = pick(item, "validation.issues") or []
+    if not isinstance(catalog_issues, list):
+        catalog_issues = [str(catalog_issues)]
+
+    gross = number(packaging.get("grossWeightKg"))
+    net = number(packaging.get("netWeightKg"))
+    reported_cbm = number(packaging.get("cbm"))
+    calculated_cbm = outer_cbm(packaging.get("size"))
+
+    if not packaging.get("size"):
+        blockers.append("PACKAGE_SIZE_MISSING")
+    if gross is None or gross <= 0:
+        blockers.append("GROSS_WEIGHT_MISSING")
+    if reported_cbm is None or reported_cbm <= 0:
+        blockers.append("CBM_MISSING")
+    if gross is not None and net is not None and gross < net:
+        blockers.append("REPORTED_GROSS_WEIGHT_LT_MACHINE_WEIGHT")
+    if reported_cbm and calculated_cbm:
+        difference = abs(reported_cbm - calculated_cbm) / calculated_cbm
+        if difference > 0.10:
+            warnings.append("REPORTED_CBM_DIFFERS_FROM_OUTER_DIMENSIONS")
+
+    freight_terms = ("PACK", "PACKAGE", "GROSS", "CBM", "FREIGHT")
+    for issue in catalog_issues:
+        normalized_issue = str(issue).upper()
+        if any(term in normalized_issue for term in freight_terms):
+            blockers.append(f"CATALOG_{normalized_issue}")
+
+    blockers = sorted(set(blockers))
+    warnings = sorted(set(warnings))
+    return {
+        "catalogStatus": pick(item, "validation.status"),
+        "catalogIssues": catalog_issues,
+        "calculatedOuterCbm": round(calculated_cbm, 4) if calculated_cbm is not None else None,
+        "blockers": blockers,
+        "warnings": warnings,
+        "freightInquiryReady": not blockers,
+        "bookingReady": not blockers and not warnings,
+    }
+
+
 def normalized(item: dict[str, Any], include_internal: bool) -> dict[str, Any]:
     product_id = str(pick(item, "id", "raw.id") or "")
     model = str(pick(item, "model", "productModel", "raw.productModel") or "")
+    packaging = {
+        "size": pick(item, "dimensions.packageSize", "packagingSize", "raw.packagingSize"),
+        "grossWeightKg": pick(item, "dimensions.packageWeight", "packagingWeight", "raw.packagingWeight"),
+        "netWeightKg": pick(
+            item,
+            "dimensions.machineWeight",
+            "specs.Overall machine weight",
+            "specs.weight",
+            "raw.attributes.weight",
+        ),
+        "cbm": pick(item, "dimensions.packageCbm", "packagingVolume", "raw.packagingVolume"),
+    }
     result = {
         "id": product_id,
         "model": model,
@@ -59,12 +142,7 @@ def normalized(item: dict[str, Any], include_internal: bool) -> dict[str, Any]:
         "category": pick(item, "category", "categoryName", "raw.categoryName"),
         "specs": pick(item, "specs", "raw.attributes", "raw.productParams") or {},
         "compatibility": pick(item, "compatibility") or {},
-        "packaging": {
-            "size": pick(item, "dimensions.packageSize", "packagingSize", "raw.packagingSize"),
-            "grossWeightKg": pick(item, "dimensions.packageWeight", "packagingWeight", "raw.packagingWeight"),
-            "netWeightKg": pick(item, "dimensions.machineWeight"),
-            "cbm": pick(item, "dimensions.packageCbm", "packagingVolume", "raw.packagingVolume"),
-        },
+        "packaging": packaging,
         "materials": {
             "images": pick(item, "materials.images", "raw.productImages") or [],
             "mainImage": pick(item, "materials.mainImage", "raw.mainImageUrl"),
@@ -86,6 +164,7 @@ def normalized(item: dict[str, Any], include_internal: bool) -> dict[str, Any]:
             "factory": pick(item, "factory", "raw.factory"),
             "tag": pick(item, "tag", "raw.tag"),
         }
+    result["quality"] = quality_checks(item, packaging)
     return result
 
 
@@ -150,10 +229,14 @@ def main() -> int:
         print(f"Catalog: {args.catalog.name}; query: {args.query}; hits: {len(matches)}")
         for row in matches:
             price = row.get("pricing", {}).get("base", "[redacted]")
-            print(f"- {row['id']} | {row['model']} | {row['category']} | price={price} | packing={row['packaging']} | overlays={row['appliedOverlays']}")
+            print(
+                f"- {row['id']} | {row['model']} | {row['category']} | price={price} "
+                f"| packing={row['packaging']} | freightReady={row['quality']['freightInquiryReady']} "
+                f"| bookingReady={row['quality']['bookingReady']} | blockers={row['quality']['blockers']} "
+                f"| warnings={row['quality']['warnings']} | overlays={row['appliedOverlays']}"
+            )
     return 0 if matches else 2
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
