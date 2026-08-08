@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yiyunying/activation-receipt.schema.json",
+  "title": "Automation activation receipt",
+  "type": "object",
+  "required": ["authorizedBy", "effectiveFrom", "effectiveUntil", "accounts", "crmOwner", "channels", "customerScope", "limits", "excludedActions", "stopInstruction"],
+  "properties": {
+    "authorizedBy": { "type": "string" },
+    "effectiveFrom": { "type": "string", "format": "date-time" },
+    "effectiveUntil": { "type": "string", "format": "date-time" },
+    "accounts": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "crmOwner": { "type": "string" },
+    "channels": { "type": "array", "items": { "enum": ["whatsapp", "email", "crm"] } },
+    "customerScope": { "type": "object" },
+    "limits": { "type": "object" },
+    "protectionWindowDays": { "type": "integer", "minimum": 0 },
+    "excludedActions": { "type": "array", "items": { "type": "string" } },
+    "stopInstruction": { "type": "string" },
+    "dryRun": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}
+

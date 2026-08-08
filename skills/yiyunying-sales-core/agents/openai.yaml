@@ -1,0 +1,8 @@
+interface:
+  display_name: "Yiyunying Sales Core"
+  short_description: "Audit customer evidence, outbound actions and CRM state."
+  brand_color: "#166534"
+  default_prompt: "Use $yiyunying-sales-core to audit this customer, determine the next safe action, and verify CRM state."
+policy:
+  allow_implicit_invocation: true
+

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yiyunying/action-ledger.schema.json",
+  "title": "Verified sales action ledger",
+  "type": "object",
+  "required": ["runId", "cursor", "actions"],
+  "properties": {
+    "runId": { "type": "string" },
+    "cursor": { "type": "string" },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["actionKey", "customerId", "actionType", "requestedAt", "status"],
+        "properties": {
+          "actionKey": { "type": "string" },
+          "customerId": { "type": "string" },
+          "actionType": { "enum": ["audit", "background-research", "draft", "send-whatsapp", "send-email", "crm-write", "stage-change", "public-pool", "archive", "freight-request", "quote", "pi"] },
+          "channel": { "type": ["string", "null"] },
+          "contentHash": { "type": ["string", "null"] },
+          "requestedAt": { "type": "string", "format": "date-time" },
+          "status": { "enum": ["planned", "skipped", "blocked", "failed", "sent", "delivered", "read", "written", "verified"] },
+          "verification": { "type": ["object", "null"] },
+          "nextAction": { "type": ["string", "null"] }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}
+

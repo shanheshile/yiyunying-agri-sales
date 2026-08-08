@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yiyunying/evidence-bundle.schema.json",
+  "title": "Customer evidence bundle",
+  "type": "object",
+  "required": ["customer", "observedAt", "sources"],
+  "properties": {
+    "customer": {
+      "type": "object",
+      "required": ["stableId"],
+      "properties": {
+        "stableId": { "type": "string", "minLength": 1 },
+        "crmOwner": { "type": ["string", "null"] },
+        "contactName": { "type": ["string", "null"] },
+        "country": { "type": ["string", "null"] },
+        "language": { "type": ["string", "null"] },
+        "phones": { "type": "array", "items": { "type": "string" } },
+        "emails": { "type": "array", "items": { "type": "string", "format": "email" } }
+      },
+      "additionalProperties": true
+    },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["kind", "direction", "observedAt", "binding", "contentStatus"],
+        "properties": {
+          "kind": { "enum": ["inquiry", "crm", "whatsapp", "email", "quote", "pi", "order", "payment", "shipping", "background-research"] },
+          "sourceId": { "type": ["string", "null"] },
+          "direction": { "enum": ["inbound", "outbound", "internal", "not-applicable"] },
+          "observedAt": { "type": "string", "format": "date-time" },
+          "binding": { "enum": ["exact", "corroborated", "ambiguous", "conflicting"] },
+          "contentStatus": { "enum": ["complete", "partial", "encrypted", "missing", "failed"] },
+          "facts": { "type": "object" },
+          "rawReference": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "latestIntent": { "type": ["string", "null"] },
+    "confirmedFacts": { "type": "object" },
+    "conflicts": { "type": "array", "items": { "type": "string" } },
+    "missingMinimumFacts": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}
+

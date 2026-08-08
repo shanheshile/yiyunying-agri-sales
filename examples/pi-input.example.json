@@ -1,0 +1,22 @@
+{
+  "seller": { "legalName": "Example Seller Ltd.", "address": "Verified seller address" },
+  "buyer": { "legalName": "Example Buyer Ltd.", "address": "Verified buyer address" },
+  "piNumber": "PI-EXAMPLE-001",
+  "quoteReference": "Q-EXAMPLE-001",
+  "orderReference": null,
+  "issueDate": "2026-08-08",
+  "currency": "USD",
+  "incoterm": "EXW",
+  "destination": "Verified named place",
+  "items": [
+    { "productId": "example-product", "description": "Example machine", "configuration": "verified configuration", "quantity": 1, "unit": "SET", "unitPrice": 1000, "amount": 1000 }
+  ],
+  "total": 1000,
+  "packing": { "status": "confirmed-current" },
+  "paymentTerms": "Verified payment terms",
+  "bank": { "beneficiary": "Example Seller Ltd.", "account": "EXAMPLE-ACCOUNT", "bankName": "Example Bank", "swift": "EXAMPLEXXX" },
+  "validity": "10 days",
+  "signatureOrSeal": null,
+  "humanConfirmationRequired": true
+}
+

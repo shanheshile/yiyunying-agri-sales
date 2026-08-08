@@ -1,0 +1,8 @@
+interface:
+  display_name: "Agricultural Product Pack"
+  short_description: "Resolve machinery facts, fit, packing and materials."
+  brand_color: "#3F6212"
+  default_prompt: "Use $yiyunying-agri-product-pack to identify the exact machinery product, verify parameters and select matching materials."
+policy:
+  allow_implicit_invocation: true
+

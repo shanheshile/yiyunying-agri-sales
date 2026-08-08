@@ -1,0 +1,8 @@
+interface:
+  display_name: "Trade Quote And PI"
+  short_description: "Validate freight, pricing, currency, quotation and PI."
+  brand_color: "#0F766E"
+  default_prompt: "Use $yiyunying-trade-quote-pi to verify the quote inputs, compare complete freight options, and prepare a confirmation-ready result."
+policy:
+  allow_implicit_invocation: true
+

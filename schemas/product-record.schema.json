@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yiyunying/product-record.schema.json",
+  "title": "Product record",
+  "type": "object",
+  "required": ["id", "model", "category", "provenance"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "model": { "type": "string", "minLength": 1 },
+    "code": { "type": ["string", "null"] },
+    "name": {
+      "type": "object",
+      "properties": {
+        "en": { "type": ["string", "null"] },
+        "local": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "category": { "type": "string" },
+    "configuration": { "type": "object" },
+    "specs": { "type": "object" },
+    "compatibility": { "type": "object" },
+    "packaging": {
+      "type": "object",
+      "properties": {
+        "lengthMm": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "widthMm": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "heightMm": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "grossWeightKg": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "netWeightKg": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "cbm": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "packageCount": { "type": ["integer", "null"], "minimum": 1 },
+        "status": { "enum": ["confirmed-current", "confirmed-historical", "estimated", "missing", "conflicting"] }
+      },
+      "additionalProperties": true
+    },
+    "pricing": {
+      "type": "object",
+      "properties": {
+        "currency": { "type": ["string", "null"] },
+        "internalCost": { "type": ["number", "null"] },
+        "effectiveFrom": { "type": ["string", "null"], "format": "date" },
+        "status": { "enum": ["confirmed-current", "confirmed-historical", "missing", "conflicting"] }
+      },
+      "additionalProperties": true
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "location", "match"],
+        "properties": {
+          "type": { "enum": ["image", "video", "datasheet", "manual", "certificate"] },
+          "location": { "type": "string" },
+          "match": { "enum": ["exact-model", "exact-series", "generic", "unknown"] },
+          "verifiedAt": { "type": ["string", "null"], "format": "date-time" }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["sourceId", "observedAt", "grade"],
+      "properties": {
+        "sourceId": { "type": "string" },
+        "recordId": { "type": ["string", "null"] },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "effectiveFrom": { "type": ["string", "null"], "format": "date-time" },
+        "grade": { "enum": ["confirmed-current", "confirmed-historical", "derived", "unverified"] }
+      }
+    }
+  },
+  "additionalProperties": true
+}
+

@@ -1,0 +1,18 @@
+{
+  "name": "yiyunying-agri-sales",
+  "version": "1.0.0",
+  "description": "Evidence-first agricultural machinery sales skills for customer follow-up, product qualification, quotations, freight, PI, CRM write-back, and controlled automation.",
+  "author": {
+    "name": "Yiyunying"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Yiyunying Agri Sales",
+    "shortDescription": "Evidence-first agricultural machinery sales workflows.",
+    "longDescription": "A configurable sales skill suite covering customer evidence audits, multilingual outreach, product and material resolution, freight comparison, quotations, PI checks, CRM state transitions, and opt-in automation.",
+    "developerName": "Yiyunying",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Use $yiyunying-agri-sales-distribution to audit the available customer evidence and prepare the safest next sales action."
+  }
+}

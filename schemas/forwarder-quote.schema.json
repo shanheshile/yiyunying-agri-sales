@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yiyunying/forwarder-quote.schema.json",
+  "title": "Forwarder quote",
+  "type": "object",
+  "required": ["requestKey", "forwarderId", "incoterm", "destination", "currency", "charges", "capability", "observedAt"],
+  "properties": {
+    "requestKey": { "type": "string" },
+    "forwarderId": { "type": "string" },
+    "capability": { "enum": ["available", "unavailable", "conditional", "unknown"] },
+    "unavailableReason": { "type": ["string", "null"] },
+    "fallbackIncoterms": { "type": "array", "items": { "type": "string" } },
+    "incoterm": { "type": "string" },
+    "destination": { "type": "string" },
+    "route": { "type": ["string", "null"] },
+    "carrier": { "type": ["string", "null"] },
+    "sailing": { "type": ["string", "null"] },
+    "transitDays": { "type": ["number", "null"], "minimum": 0 },
+    "validUntil": { "type": ["string", "null"], "format": "date" },
+    "currency": { "type": "string" },
+    "charges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scope", "name", "amount", "currency", "basis"],
+        "properties": {
+          "scope": { "enum": ["origin", "main-carriage", "destination", "delivery", "customs", "tax", "other"] },
+          "name": { "type": "string" },
+          "amount": { "type": ["number", "null"] },
+          "currency": { "type": "string" },
+          "basis": { "type": "string" },
+          "minimum": { "type": ["number", "null"] },
+          "asActual": { "type": "boolean" },
+          "normalizedAmount": { "type": ["number", "null"], "minimum": 0 },
+          "normalizedCurrency": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "restrictions": { "type": "array", "items": { "type": "string" } },
+    "included": { "type": "array", "items": { "type": "string" } },
+    "excluded": { "type": "array", "items": { "type": "string" } },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "rawText": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

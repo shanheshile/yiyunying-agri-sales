@@ -1,0 +1,26 @@
+{
+  "customerId": "example-customer",
+  "currency": "USD",
+  "incoterm": "CIF",
+  "pricingMode": "markup-on-cost",
+  "profitRate": 0.15,
+  "items": [
+    {
+      "productId": "example-product",
+      "model": "EXAMPLE-MODEL",
+      "configuration": "verified configuration",
+      "quantity": 1,
+      "unitCost": 10000,
+      "costCurrency": "CNY",
+      "imageVerified": true
+    }
+  ],
+  "termCosts": [
+    { "name": "verified complete freight scope", "amount": 1000, "currency": "USD", "sourceId": "example-forwarder-quote" }
+  ],
+  "exchangeRates": [
+    { "from": "USD", "to": "CNY", "rate": 7.2, "observedAt": "2026-08-08T00:00:00Z", "source": "example-only" }
+  ],
+  "humanConfirmationRequired": true
+}
+

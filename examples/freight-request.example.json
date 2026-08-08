@@ -1,0 +1,12 @@
+{
+  "customerId": "example-customer",
+  "country": "Example Country",
+  "destination": { "kind": "port", "value": "Example Port" },
+  "product": { "id": "example-product", "model": "EXAMPLE-MODEL", "configuration": "verified configuration", "batteryOrDangerousGoods": false },
+  "quantity": 1,
+  "packaging": { "lengthMm": 1000, "widthMm": 800, "heightMm": 700, "grossWeightKg": 150, "cbm": 0.56, "packageCount": 1, "sourceStatus": "confirmed-current" },
+  "incoterm": "CIF",
+  "requestedAt": "2026-08-08T00:00:00Z",
+  "deduplicationKey": "example-customer|example-product|1|example-port|CIF|1000x800x700|150|0.56"
+}
+

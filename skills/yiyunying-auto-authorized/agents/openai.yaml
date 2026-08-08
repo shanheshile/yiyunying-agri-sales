@@ -1,0 +1,8 @@
+interface:
+  display_name: "Auto Authorized"
+  short_description: "Apply a current scoped authorization to low-risk sales work."
+  brand_color: "#B45309"
+  default_prompt: "Use $yiyunying-auto-authorized only after validating the current activation receipt and safety gates."
+policy:
+  allow_implicit_invocation: false
+

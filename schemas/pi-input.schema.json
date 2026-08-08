@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yiyunying/pi-input.schema.json",
+  "title": "Proforma invoice input",
+  "type": "object",
+  "required": ["seller", "buyer", "piNumber", "issueDate", "currency", "incoterm", "destination", "items", "paymentTerms", "bank", "validity", "humanConfirmationRequired"],
+  "properties": {
+    "seller": { "$ref": "#/$defs/party" },
+    "buyer": { "$ref": "#/$defs/party" },
+    "piNumber": { "type": "string", "minLength": 1 },
+    "quoteReference": { "type": ["string", "null"] },
+    "orderReference": { "type": ["string", "null"] },
+    "issueDate": { "type": "string", "format": "date" },
+    "currency": { "type": "string" },
+    "incoterm": { "type": "string" },
+    "destination": { "type": "string" },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["productId", "description", "configuration", "quantity", "unit", "unitPrice", "amount"],
+        "properties": {
+          "productId": { "type": "string" },
+          "description": { "type": "string" },
+          "configuration": { "type": "string" },
+          "quantity": { "type": "number", "exclusiveMinimum": 0 },
+          "unit": { "type": "string" },
+          "unitPrice": { "type": "number", "minimum": 0 },
+          "amount": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "packing": { "type": "object" },
+    "paymentTerms": { "type": "string", "minLength": 1 },
+    "bank": {
+      "type": "object",
+      "required": ["beneficiary", "account", "bankName", "swift"],
+      "properties": {
+        "beneficiary": { "type": "string" },
+        "account": { "type": "string" },
+        "bankName": { "type": "string" },
+        "swift": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "validity": { "type": "string" },
+    "signatureOrSeal": { "type": ["string", "null"] },
+    "humanConfirmationRequired": { "const": true }
+  },
+  "$defs": {
+    "party": {
+      "type": "object",
+      "required": ["legalName", "address"],
+      "properties": {
+        "legalName": { "type": "string", "minLength": 1 },
+        "address": { "type": "string", "minLength": 1 },
+        "contact": { "type": ["string", "null"] },
+        "taxId": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
+

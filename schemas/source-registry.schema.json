@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yiyunying/source-registry.schema.json",
+  "title": "Sales source registry",
+  "type": "object",
+  "required": ["schemaVersion", "sources"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "profile": { "type": "string" },
+    "sources": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "$ref": "#/$defs/source" },
+          { "type": "array", "items": { "$ref": "#/$defs/source" } }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["type", "location"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "location": { "type": "string" },
+        "priority": { "type": "integer" },
+        "freshnessHours": { "type": ["integer", "null"], "minimum": 0 },
+        "containsInternalCost": { "type": "boolean" },
+        "credentials": { "type": "string", "enum": ["none", "environment", "platform-credential-store"] },
+        "supports": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
+

@@ -1,0 +1,8 @@
+interface:
+  display_name: "No Auto Follow"
+  short_description: "Keep sales work draft-only until explicitly authorized."
+  brand_color: "#4B5563"
+  default_prompt: "Use $yiyunying-no-auto-follow and prepare a draft-only sales result without external or CRM changes."
+policy:
+  allow_implicit_invocation: true
+

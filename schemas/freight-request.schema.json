@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yiyunying/freight-request.schema.json",
+  "title": "Freight inquiry request",
+  "type": "object",
+  "required": ["customerId", "country", "destination", "product", "quantity", "packaging", "incoterm"],
+  "properties": {
+    "customerId": { "type": "string" },
+    "country": { "type": "string" },
+    "destination": {
+      "type": "object",
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": { "enum": ["exact-address", "postcode-city", "port"] },
+        "value": { "type": "string", "minLength": 2 }
+      }
+    },
+    "product": {
+      "type": "object",
+      "required": ["id", "model", "configuration"],
+      "properties": {
+        "id": { "type": "string" },
+        "model": { "type": "string" },
+        "configuration": { "type": "string" },
+        "batteryOrDangerousGoods": { "type": ["boolean", "null"] }
+      }
+    },
+    "quantity": { "type": "integer", "minimum": 1 },
+    "packaging": {
+      "type": "object",
+      "required": ["lengthMm", "widthMm", "heightMm", "grossWeightKg", "cbm", "packageCount", "sourceStatus"],
+      "properties": {
+        "lengthMm": { "type": "number", "exclusiveMinimum": 0 },
+        "widthMm": { "type": "number", "exclusiveMinimum": 0 },
+        "heightMm": { "type": "number", "exclusiveMinimum": 0 },
+        "grossWeightKg": { "type": "number", "exclusiveMinimum": 0 },
+        "cbm": { "type": "number", "exclusiveMinimum": 0 },
+        "packageCount": { "type": "integer", "minimum": 1 },
+        "sourceStatus": { "const": "confirmed-current" }
+      }
+    },
+    "incoterm": { "enum": ["EXW", "FCA", "FOB", "CFR", "CNF", "CIF", "DAP", "DDU", "DDP"] },
+    "requestedAt": { "type": "string", "format": "date-time" },
+    "deduplicationKey": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "incoterm": { "enum": ["CIF", "CFR", "CNF"] } } },
+      "then": { "properties": { "destination": { "properties": { "kind": { "const": "port" } } } } }
+    },
+    {
+      "if": { "properties": { "incoterm": { "enum": ["DAP", "DDU", "DDP"] } } },
+      "then": { "properties": { "destination": { "properties": { "kind": { "enum": ["exact-address", "postcode-city"] } } } } }
+    }
+  ],
+  "additionalProperties": true
+}
+

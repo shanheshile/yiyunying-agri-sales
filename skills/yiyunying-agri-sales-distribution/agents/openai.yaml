@@ -1,0 +1,8 @@
+interface:
+  display_name: "Agricultural Sales Distribution"
+  short_description: "Run a configurable, non-personal agricultural sales workflow."
+  brand_color: "#15803D"
+  default_prompt: "Use $yiyunying-agri-sales-distribution to audit the customer and prepare the next verified agricultural sales action."
+policy:
+  allow_implicit_invocation: true
+

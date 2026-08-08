@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0",
+  "permissionMode": "no-auto-follow",
+  "timezone": "Asia/Shanghai",
+  "workday": {
+    "start": "08:00",
+    "reportOffsetMinutes": 570
+  },
+  "queue": {
+    "whatsappUniqueCustomerLimitPerDay": 40,
+    "emailUniqueCustomerLimitPerDay": null,
+    "fStageReviewDays": 3,
+    "repeatContactProtectionDays": 5,
+    "minimumQueueSize": 0,
+    "doNotFillQuotaWithLowValueCustomers": true
+  },
+  "outbound": {
+    "minimumSubstantiveWhatsAppMessages": 2,
+    "oneCompleteSentencePerWhatsAppMessage": true,
+    "requireCustomerLanguage": true,
+    "requireEmailBody": true,
+    "requireEmailSignature": true,
+    "preventSimilarSubjectAndBody": true,
+    "verifyAfterSend": true
+  },
+  "quotation": {
+    "backendDefaultProfitRate": 0.1,
+    "usualCurrentProfitRate": 0.15,
+    "profitRateSemantics": "must-be-declared-by-adapter",
+    "requireVerifiedProductImage": true,
+    "requireFreshExchangeRate": true,
+    "roundCustomerAmountsUp": true,
+    "requireHumanConfirmationBeforeExternalSend": true
+  },
+  "automation": {
+    "enabled": false,
+    "dryRun": true,
+    "requireActivationReceipt": true,
+    "stopOnReadbackFailure": true,
+    "stopOnIdentityConflict": true,
+    "stopOnUnexpectedReply": true
+  }
+}
+

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "overrides": [
+    {
+      "id": "example-model-packing-20260808",
+      "priority": 100,
+      "effectiveFrom": "2026-08-08",
+      "match": { "id": "example-product-id", "model": "EXAMPLE-MODEL" },
+      "set": {
+        "dimensions.packageSize": "1000*800*700",
+        "dimensions.packageWeight": "150 kg",
+        "dimensions.packageCbm": 0.56
+      },
+      "note": "Example only; bind real overrides to a stable product ID and verified source."
+    }
+  ]
+}
+

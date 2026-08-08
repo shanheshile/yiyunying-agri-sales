@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0",
+  "notice": "Illustrative records only. They are not approved products, prices or freight inputs.",
+  "products": [
+    {
+      "id": "example-tractor-50",
+      "model": "EXAMPLE-TRACTOR-50",
+      "name": { "en": "Example 50 HP Tractor", "local": "示例50马力拖拉机" },
+      "category": "tractor",
+      "configuration": { "drive": "4WD", "operatorStation": "open" },
+      "specs": { "horsepower": 50 },
+      "packaging": { "lengthMm": null, "widthMm": null, "heightMm": null, "grossWeightKg": null, "netWeightKg": null, "cbm": null, "packageCount": 1, "status": "missing" },
+      "pricing": { "currency": null, "internalCost": null, "effectiveFrom": null, "status": "missing" },
+      "materials": [],
+      "provenance": { "sourceId": "public-example", "recordId": "example-tractor-50", "observedAt": "2026-08-08T00:00:00Z", "effectiveFrom": null, "grade": "unverified" }
+    },
+    {
+      "id": "example-remote-mower-500",
+      "model": "EXAMPLE-MOWER-500",
+      "name": { "en": "Example Remote Mower", "local": "示例遥控割草机" },
+      "category": "remote-mower",
+      "configuration": {},
+      "specs": { "cuttingWidthMm": 500 },
+      "packaging": { "lengthMm": null, "widthMm": null, "heightMm": null, "grossWeightKg": null, "netWeightKg": null, "cbm": null, "packageCount": 1, "status": "missing" },
+      "pricing": { "currency": null, "internalCost": null, "effectiveFrom": null, "status": "missing" },
+      "materials": [],
+      "provenance": { "sourceId": "public-example", "recordId": "example-remote-mower-500", "observedAt": "2026-08-08T00:00:00Z", "effectiveFrom": null, "grade": "unverified" }
+    }
+  ]
+}
+
