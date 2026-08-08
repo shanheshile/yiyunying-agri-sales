@@ -5,6 +5,9 @@
   "author": {
     "name": "Yiyunying"
   },
+  "homepage": "https://github.com/shanheshile/yiyunying-agri-sales",
+  "repository": "https://github.com/shanheshile/yiyunying-agri-sales",
+  "license": "MIT",
   "skills": "./skills/",
   "interface": {
     "displayName": "Yiyunying Agri Sales",
