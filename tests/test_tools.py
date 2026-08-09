@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 import subprocess
 import sys
@@ -155,6 +156,7 @@ def effectiveness_project():
             "productionStartDate": "2026-01-01",
             "asOfDate": "2026-02-11",
             "annualTaskVolume": 500,
+            "annualTaskVolumeByType": {"followup": 500},
             "standardHourlyCostCny": 100,
             "ownerRole": "workflow owner",
             "artifacts": [{"type": "skill", "version": "1.3.0", "reusable": True}],
@@ -186,7 +188,8 @@ def effectiveness_project():
             "secondTranche": {"eligibleTierKeys": ["second", "first"], "minStableRunDays": 90, "minActiveUserRetentionPct": 50}
         },
         "userValidations": [
-            {"pseudonymousUserId": "actor-a", "verifiedAt": "2026-02-11", "confirmedRealUse": True, "confirmedUseful": True}
+            {"pseudonymousUserId": actor, "verifiedAt": "2026-02-11", "confirmedRealUse": True, "confirmedUseful": True}
+            for actor in ("actor-a", "actor-b", "actor-c")
         ],
         "sustainabilityReview": {
             "stableRunDays": 42,
@@ -223,7 +226,7 @@ def effectiveness_run(index: int):
         "riskIncident": False,
         "dataSecurityIncident": False,
         "artifactVersion": "1.3.0",
-        "evidenceReceiptHash": "a" * 64,
+        "evidenceReceiptHash": hashlib.sha256(f"receipt-{index}".encode()).hexdigest(),
     }
 
 
@@ -248,6 +251,12 @@ class EffectivenessTests(unittest.TestCase):
         row["evidenceReceiptHash"] = None
         with self.assertRaisesRegex(ValueError, "pseudonymousActorId"):
             effectiveness.evaluate(effectiveness_project(), [row])
+
+    def test_duplicate_evidence_receipts_are_rejected(self):
+        rows = [effectiveness_run(1), effectiveness_run(2)]
+        rows[1]["evidenceReceiptHash"] = rows[0]["evidenceReceiptHash"]
+        with self.assertRaisesRegex(ValueError, "distinct evidenceReceiptHash"):
+            effectiveness.evaluate(effectiveness_project(), rows)
 
     def test_recorder_appends_a_verified_privacy_minimized_row(self):
         with tempfile.TemporaryDirectory() as directory:

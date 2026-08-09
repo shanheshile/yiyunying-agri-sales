@@ -7,13 +7,17 @@
     "schemaVersion": { "const": "1.0" },
     "project": {
       "type": "object",
-      "required": ["id", "name", "productionStartDate", "asOfDate", "annualTaskVolume", "standardHourlyCostCny", "ownerRole", "artifacts"],
+      "required": ["id", "name", "productionStartDate", "asOfDate", "annualTaskVolume", "annualTaskVolumeByType", "standardHourlyCostCny", "ownerRole", "artifacts"],
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "name": { "type": "string", "minLength": 1 },
         "productionStartDate": { "type": ["string", "null"], "format": "date" },
         "asOfDate": { "type": ["string", "null"], "format": "date" },
         "annualTaskVolume": { "type": ["number", "null"], "minimum": 0 },
+        "annualTaskVolumeByType": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0 }
+        },
         "standardHourlyCostCny": { "type": ["number", "null"], "minimum": 0 },
         "ownerRole": { "type": ["string", "null"] },
         "artifacts": {

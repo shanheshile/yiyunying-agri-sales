@@ -178,6 +178,10 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
         raise ValueError("; ".join(errors))
 
     verified = [row for row in runs if row.get("realBusiness") is True and row.get("verificationStatus") == "verified"]
+    receipt_hashes = [row["evidenceReceiptHash"].casefold() for row in verified]
+    duplicate_receipts = sorted({item for item in receipt_hashes if receipt_hashes.count(item) > 1})
+    if duplicate_receipts:
+        raise ValueError("verified runs must use distinct evidenceReceiptHash values")
     excluded = len(runs) - len(verified)
     timing_rows = []
     for row in verified:
@@ -203,8 +207,25 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
         else None
     )
     annual_volume = numeric(project_info.get("annualTaskVolume"))
+    annual_volume_by_type = project_info.get("annualTaskVolumeByType", {})
     hourly_cost = numeric(project_info.get("standardHourlyCostCny"))
-    annual_saved_hours = average_net_saved * annual_volume / 60 if average_net_saved is not None and annual_volume is not None else None
+    timing_by_type: dict[str, list[float]] = {}
+    for source, timing in zip(verified, timing_rows):
+        timing_by_type.setdefault(source["taskType"], []).append(timing["netSaved"])
+    annual_volume_source = None
+    annual_saved_hours = None
+    if timing_by_type and isinstance(annual_volume_by_type, dict) and all(
+        numeric(annual_volume_by_type.get(task_type)) is not None for task_type in timing_by_type
+    ):
+        annual_saved_hours = sum(
+            (sum(values) / len(values)) * float(annual_volume_by_type[task_type])
+            for task_type, values in timing_by_type.items()
+        ) / 60
+        annual_volume = sum(float(annual_volume_by_type[task_type]) for task_type in timing_by_type)
+        annual_volume_source = "task-type-weighted"
+    elif len(timing_by_type) == 1 and average_net_saved is not None and annual_volume is not None:
+        annual_saved_hours = average_net_saved * annual_volume / 60
+        annual_volume_source = "single-task-aggregate"
 
     economics = project.get("economics", {})
     monetary_keys = (
@@ -236,6 +257,8 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
         and row.get("confirmedUseful") is True
         and privacy_safe_identifier(row.get("pseudonymousUserId"))
     ]
+    validated_actor_ids = {row["pseudonymousUserId"] for row in validations}
+    validated_actors = actors & validated_actor_ids
     artifacts = [row for row in project_info.get("artifacts", []) if row.get("reusable") is True and row.get("version")]
     sustainability = project.get("sustainabilityReview", {})
 
@@ -278,7 +301,7 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
         if minimum_efficiency is None or efficiency is None or efficiency < minimum_efficiency:
             reasons.append(f"净提效需达到 {value(minimum_efficiency, '%')}")
         adoption_rule = award.get("adoptionRule")
-        user_requirement_met = minimum_users is not None and len(actors) >= minimum_users
+        user_requirement_met = minimum_users is not None and len(validated_actors) >= minimum_users
         if adoption_rule == "users" and not user_requirement_met:
             reasons.append(f"实际使用者需达到 {value(minimum_users, ' 人')}")
         elif adoption_rule == "team-or-users" and not (scope.get("teamAdopted") is True or user_requirement_met):
@@ -322,6 +345,7 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
             "declaredDurationDays": declared_duration_days,
             "observedRunSpanDays": observed_duration_days,
             "uniqueUsers": len(actors),
+            "validatedUsers": len(validated_actors),
             "actualUserValidations": len(validations),
             "reusableArtifacts": len(artifacts),
         },
@@ -333,6 +357,7 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
         },
         "value": {
             "annualTaskVolume": annual_volume,
+            "annualVolumeSource": annual_volume_source,
             "annualSavedHours": round(annual_saved_hours, 4) if annual_saved_hours is not None else None,
             "standardHourlyCostCny": hourly_cost,
             **monetary,
@@ -382,6 +407,7 @@ def markdown(report: dict[str, Any]) -> str:
         f"| 已核验真实任务 | {value(evidence['verifiedRealBusinessRuns'], ' 次')} |",
         f"| 真实运行天数 | {value(evidence['durationDays'], ' 天')} |",
         f"| 实际使用者 | {value(evidence['uniqueUsers'], ' 人')} |",
+        f"| 已完成使用确认的实际使用者 | {value(evidence['validatedUsers'], ' 人')} |",
         f"| 净节省时间 | {value(timing['totalNetSavedMinutes'], ' 分钟')} |",
         f"| 净提效比例 | {value(timing['netEfficiencyPct'], '%')} |",
         f"| 年度净价值 | {value(economics['annualNetValueCny'], ' CNY')} |",

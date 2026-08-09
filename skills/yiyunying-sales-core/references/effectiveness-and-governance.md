@@ -24,6 +24,8 @@ Use a verified annual task volume and standard labor-hour cost:
 `annual net value = annual saved hours * hourly cost + verified direct cost savings + verified added gross profit - AI/tool/API/procurement/maintenance cost - quantified business error loss`
 
 Unknown inputs remain unknown; do not convert them to zero to claim eligibility.
+For mixed task types, annualize each type with its own verified annual volume;
+do not apply one pooled average to an unrelated production mix.
 
 ## Quality and risk gates
 
@@ -36,6 +38,7 @@ limit, data security fails, evidence is inconsistent or responsibility is unclea
 
 - Keep customer identity, messages, quotes and order details in the authorized business system.
 - The measurement ledger stores a random run ID, pseudonymous actor ID, task type, dates, duration components, verification state and quality/risk booleans only.
+- Require one distinct evidence-receipt hash per verified run. Count a user only when the same pseudonymous ID has both verified use and actual-user validation.
 - Never store phone, email, customer name, message text, credentials or external-system record IDs in the measurement ledger.
 - Append metrics after operational read-back. Evaluate them in a separate daily/weekly job; do not load the historical ledger into each customer prompt.
 - Record tool/API cost, maintenance and exceptions even when they reduce the claimed benefit.

@@ -6,6 +6,7 @@
     "productionStartDate": null,
     "asOfDate": null,
     "annualTaskVolume": null,
+    "annualTaskVolumeByType": {},
     "standardHourlyCostCny": null,
     "ownerRole": null,
     "artifacts": []

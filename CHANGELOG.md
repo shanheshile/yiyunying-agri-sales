@@ -7,6 +7,7 @@
 - Added privacy-minimized real-task recording with evidence-receipt hashes.
 - Added deterministic net-efficiency, annual-value, quality/risk, adoption and award-readiness reporting.
 - Added configurable staged-award and sustainability gates without exposing organization-specific policy or inventing missing evidence.
+- Added distinct-receipt deduplication, validated-user counting and task-type-weighted annualization.
 - Added a measurement-only portable module so routine sales prompts do not load historical metrics.
 
 ## 1.2.0 - 2026-08-09

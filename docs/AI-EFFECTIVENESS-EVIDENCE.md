@@ -36,6 +36,10 @@ a SHA-256 hash of a separately retained evidence receipt. The ledger stores the
 hash, not the receipt contents. Keep pending or failed work; do not remove it to
 improve the result.
 
+Use one distinct per-run receipt. Reusing a receipt hash for multiple verified
+runs is rejected. A counted user must both appear in verified task records and
+complete actual-user validation under the same pseudonymous ID.
+
 ## Calculations
 
 Per run:
@@ -60,6 +64,11 @@ annual net value = annual saved hours * standard hourly labor cost
                  - annual AI/tool/API/procurement/maintenance cost
                  - annual quantified business error loss
 ```
+
+The aggregate annual-volume formula is valid only for one task type. For mixed
+work, populate `annualTaskVolumeByType`; the tool weights each type by its own
+verified average and annual volume. Otherwise annual saved hours and value remain
+unknown rather than applying a distorted task mix.
 
 Do not treat missing monetary inputs as zero for an award gate.
 
