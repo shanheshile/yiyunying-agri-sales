@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0",
+  "version": "1.2.0",
+  "defaultTokenBudget": 3500,
+  "core": "core.md",
+  "variants": {
+    "agri": "variants/agri.md",
+    "ai3-team": "variants/ai3-team.md",
+    "universal": "variants/universal.md"
+  },
+  "tasks": {
+    "followup": "tasks/followup-crm.md",
+    "product": "tasks/product-material.md",
+    "quote": "tasks/quote-freight-pi.md",
+    "automation": "tasks/automation.md",
+    "reporting": "tasks/reporting.md"
+  },
+  "platforms": {
+    "generic": "platforms/generic.md",
+    "chatgpt": "platforms/chatgpt.md",
+    "claude": "platforms/claude.md",
+    "gemini": "platforms/gemini.md"
+  }
+}

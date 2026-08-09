@@ -61,6 +61,19 @@ not an active schedule. Test the same prompt manually in dry-run mode, verify
 data access and read-back, then create or enable a schedule through Codex's
 automation controls. See `docs/AUTOMATION.md`.
 
+## Other AI platforms and token use
+
+The native Codex Skills remain the detailed source. For ChatGPT projects/custom
+instructions, Claude projects, Gemini Gems/CLI and generic assistants, build a
+compact prompt containing only one deployment variant and the current task:
+
+```powershell
+python scripts/build_prompt_pack.py --variant ai3-team --task followup --platform chatgpt
+```
+
+See `portable/README.md`. Credentials are referenced through environment,
+browser/session or OS credential stores and are never embedded in a prompt pack.
+
 ## Public/private boundary
 
 Use this repository for reusable workflow and schemas. Keep personal identity,

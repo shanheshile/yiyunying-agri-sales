@@ -20,6 +20,7 @@ def load_module(name: str, path: Path):
 quote = load_module("quote_calculator", ROOT / "scripts" / "quote_calculator.py")
 pi = load_module("pi_lint", ROOT / "scripts" / "pi_lint.py")
 catalog = load_module("catalog_query", ROOT / "scripts" / "catalog_query.py")
+prompt_pack = load_module("build_prompt_pack", ROOT / "scripts" / "build_prompt_pack.py")
 
 
 class QuoteTests(unittest.TestCase):
@@ -111,6 +112,21 @@ class CatalogTests(unittest.TestCase):
         self.assertTrue(row["quality"]["freightInquiryReady"])
         self.assertFalse(row["quality"]["bookingReady"])
         self.assertIn("REPORTED_CBM_DIFFERS_FROM_OUTER_DIMENSIONS", row["quality"]["warnings"])
+
+
+class PromptPackTests(unittest.TestCase):
+    def test_followup_pack_stays_compact_and_excludes_quote_module(self):
+        result = prompt_pack.compose(ROOT / "portable", "agri", ["followup"], "generic", [])
+        self.assertLess(prompt_pack.estimate_tokens(result), 3500)
+        self.assertIn("Follow-up And CRM Task", result)
+        self.assertNotIn("Quote, Freight And PI Task", result)
+
+    def test_non_ascii_token_estimate_is_conservative(self):
+        self.assertEqual(prompt_pack.estimate_tokens("背调无信息"), 6)
+
+    def test_unknown_manifest_key_has_clear_error(self):
+        with self.assertRaisesRegex(ValueError, "unknown task"):
+            prompt_pack.compose(ROOT / "portable", "agri", ["missing"], "generic", [])
 
 
 if __name__ == "__main__":

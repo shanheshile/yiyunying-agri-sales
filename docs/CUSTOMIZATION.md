@@ -8,6 +8,8 @@
 - Add product changes as effective-dated, exact-ID field overlays. Do not rewrite the original snapshot without a new manifest and checksum.
 - Add new product families to the product qualification reference and data schema before using them in customer work.
 - Add report fields in the deployment reporting reference while retaining verified/unknown distinctions.
+- For non-Codex platforms, edit the smallest portable variant/task module and rebuild only the prompt needed for that task.
+- Bind credentials by secret reference. Never put raw passwords, cookies or tokens in a Skill, portable prompt, repository or generated report.
 
 ## Rule precedence
 
@@ -27,4 +29,3 @@ added to the deployment configuration with an effective date.
 
 Do not append new facts to a historical monolithic rule file. Replace or version
 the owning structured record so the current source remains unambiguous.
-

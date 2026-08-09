@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 - 2026-08-09
+
+- Added compact prompt packs for ChatGPT, Claude, Gemini and generic AI platforms.
+- Added task routing so unrelated modules are not loaded, with an enforceable token budget.
+- Added credential-reference schema and examples that keep secrets outside prompts and Git.
+
 ## 1.1.0 - 2026-08-09
 
 - Added a non-personal agricultural AI3 team entry point without duplicating the core references.

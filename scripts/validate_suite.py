@@ -138,6 +138,12 @@ def main() -> int:
         if not (root / "skills" / name / "SKILL.md").is_file():
             errors.append(f"missing required skill: {name}")
 
+    for portable in ("manifest.json", "core.md", "README.md"):
+        if not (root / "portable" / portable).is_file():
+            errors.append(f"missing portable prompt component: {portable}")
+    if not (root / "scripts" / "build_prompt_pack.py").is_file():
+        errors.append("missing portable prompt builder")
+
     if errors:
         print("Validation failed:")
         for error in errors:
