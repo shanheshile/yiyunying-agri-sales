@@ -26,6 +26,18 @@ Get-ChildItem -LiteralPath $root -Force | Where-Object { $_.Name -notin $exclude
     Copy-Item -LiteralPath $_.FullName -Destination $stage -Recurse
 }
 
+$stageRoot = [System.IO.Path]::GetFullPath($stage).TrimEnd([System.IO.Path]::DirectorySeparatorChar)
+Get-ChildItem -LiteralPath $stage -Recurse -Directory -Filter '__pycache__' |
+    Sort-Object { $_.FullName.Length } -Descending |
+    ForEach-Object {
+        $candidate = [System.IO.Path]::GetFullPath($_.FullName)
+        if (-not $candidate.StartsWith($stageRoot + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "Build cleanup escaped staging root: $candidate"
+        }
+        Remove-Item -LiteralPath $candidate -Recurse -Force
+    }
+Get-ChildItem -LiteralPath $stage -Recurse -File -Include '*.pyc', '*.pyo' | Remove-Item -Force
+
 $zip = Join-Path $output "yiyunying-agri-sales-$version.zip"
 Compress-Archive -LiteralPath $stage -DestinationPath $zip -CompressionLevel Optimal
 $hash = Get-FileHash -Algorithm SHA256 -LiteralPath $zip
