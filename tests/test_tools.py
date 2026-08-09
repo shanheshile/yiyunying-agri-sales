@@ -128,6 +128,13 @@ class PromptPackTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown task"):
             prompt_pack.compose(ROOT / "portable", "agri", ["missing"], "generic", [])
 
+    def test_every_credential_reference_uses_a_provider_prefix(self):
+        config = json.loads((ROOT / "config" / "credential-bindings.example.json").read_text(encoding="utf-8"))
+        for service in config["services"].values():
+            for key, value in service.items():
+                if key.endswith("Ref") and value is not None:
+                    self.assertRegex(value, r"^(env|credential-manager|platform):[^\s]+$")
+
 
 if __name__ == "__main__":
     unittest.main()

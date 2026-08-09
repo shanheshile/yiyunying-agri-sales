@@ -123,6 +123,17 @@ def main() -> int:
     scan_tree(root, args.public, errors)
     validate_automation(root, errors)
 
+    version_path = root / "VERSION"
+    portable_manifest_path = root / "portable" / "manifest.json"
+    if version_path.is_file() and manifest.is_file() and portable_manifest_path.is_file():
+        version = read_text(version_path).strip()
+        if json.loads(read_text(manifest)).get("version") != version:
+            errors.append("plugin version does not match VERSION")
+        if json.loads(read_text(portable_manifest_path)).get("version") != version:
+            errors.append("portable manifest version does not match VERSION")
+    else:
+        errors.append("missing VERSION or portable manifest")
+
     required = [
         "yiyunying-sales-core",
         "yiyunying-agri-product-pack",
@@ -143,6 +154,9 @@ def main() -> int:
             errors.append(f"missing portable prompt component: {portable}")
     if not (root / "scripts" / "build_prompt_pack.py").is_file():
         errors.append("missing portable prompt builder")
+    for credential_file in ("schemas/credential-bindings.schema.json", "config/credential-bindings.example.json"):
+        if not (root / credential_file).is_file():
+            errors.append(f"missing credential component: {credential_file}")
 
     if errors:
         print("Validation failed:")
