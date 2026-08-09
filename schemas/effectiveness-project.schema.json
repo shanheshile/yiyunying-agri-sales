@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Effectiveness Project",
+  "type": "object",
+  "required": ["schemaVersion", "project", "scope", "metrics", "economics", "awardPolicy", "userValidations", "sustainabilityReview"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "project": {
+      "type": "object",
+      "required": ["id", "name", "productionStartDate", "asOfDate", "annualTaskVolume", "standardHourlyCostCny", "ownerRole", "artifacts"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "productionStartDate": { "type": ["string", "null"], "format": "date" },
+        "asOfDate": { "type": ["string", "null"], "format": "date" },
+        "annualTaskVolume": { "type": ["number", "null"], "minimum": 0 },
+        "standardHourlyCostCny": { "type": ["number", "null"], "minimum": 0 },
+        "ownerRole": { "type": ["string", "null"] },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "version", "reusable"],
+            "properties": {
+              "type": { "enum": ["prompt", "template", "SOP", "program", "workflow", "agent", "skill", "other"] },
+              "version": { "type": "string" },
+              "reusable": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["teamAdopted", "crossRoleOrDepartment"],
+      "properties": {
+        "teamAdopted": { "type": "boolean" },
+        "crossRoleOrDepartment": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["coreQuality", "risk"],
+      "properties": {
+        "coreQuality": { "$ref": "#/$defs/comparisonMetric" },
+        "risk": { "$ref": "#/$defs/riskMetric" }
+      },
+      "additionalProperties": false
+    },
+    "economics": {
+      "type": "object",
+      "required": ["annualDirectCostSavingsCny", "annualAddedGrossProfitCny", "annualAiToolApiProcurementMaintenanceCostCny", "annualBusinessErrorLossCny"],
+      "properties": {
+        "annualDirectCostSavingsCny": { "type": ["number", "null"], "minimum": 0 },
+        "annualAddedGrossProfitCny": { "type": ["number", "null"], "minimum": 0 },
+        "annualAiToolApiProcurementMaintenanceCostCny": { "type": ["number", "null"], "minimum": 0 },
+        "annualBusinessErrorLossCny": { "type": ["number", "null"], "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "awardPolicy": {
+      "type": "object",
+      "required": ["tiers", "secondTranche"],
+      "properties": {
+        "tiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "label", "minRealRunDays", "minVerifiedTasks", "minNetEfficiencyPct", "minUniqueUsers", "adoptionRule", "minAnnualNetValueCny"],
+            "properties": {
+              "key": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1 },
+              "minRealRunDays": { "type": "number", "minimum": 0 },
+              "minVerifiedTasks": { "type": "number", "minimum": 0 },
+              "minNetEfficiencyPct": { "type": "number" },
+              "minUniqueUsers": { "type": ["number", "null"], "minimum": 0 },
+              "adoptionRule": { "enum": ["none", "users", "team-or-users", "cross-role-or-users"] },
+              "minAnnualNetValueCny": { "type": ["number", "null"], "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "secondTranche": {
+          "type": "object",
+          "required": ["eligibleTierKeys", "minStableRunDays", "minActiveUserRetentionPct"],
+          "properties": {
+            "eligibleTierKeys": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+            "minStableRunDays": { "type": ["number", "null"], "minimum": 0 },
+            "minActiveUserRetentionPct": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "userValidations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pseudonymousUserId", "verifiedAt", "confirmedRealUse", "confirmedUseful"],
+        "properties": {
+          "pseudonymousUserId": { "type": "string", "minLength": 1 },
+          "verifiedAt": { "type": "string", "format": "date" },
+          "confirmedRealUse": { "type": "boolean" },
+          "confirmedUseful": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "sustainabilityReview": {
+      "type": "object",
+      "required": ["stableRunDays", "activeUserRetentionPct", "qualityIncidentCount", "businessErrorCount", "customerComplaintCount", "evidenceConsistencyConfirmed", "maintainerAssigned", "dataSecurityCompliant"],
+      "properties": {
+        "stableRunDays": { "type": ["number", "null"], "minimum": 0 },
+        "activeUserRetentionPct": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "qualityIncidentCount": { "type": ["integer", "null"], "minimum": 0 },
+        "businessErrorCount": { "type": ["integer", "null"], "minimum": 0 },
+        "customerComplaintCount": { "type": ["integer", "null"], "minimum": 0 },
+        "evidenceConsistencyConfirmed": { "type": ["boolean", "null"] },
+        "maintainerAssigned": { "type": ["boolean", "null"] },
+        "dataSecurityCompliant": { "type": ["boolean", "null"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "comparisonMetric": {
+      "type": "object",
+      "required": ["name", "direction", "baselineValue", "aiValue", "allowedDegradation"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "direction": { "enum": ["higher-is-better", "lower-is-better"] },
+        "baselineValue": { "type": ["number", "null"] },
+        "aiValue": { "type": ["number", "null"] },
+        "allowedDegradation": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "riskMetric": {
+      "type": "object",
+      "required": ["name", "aiValue", "maximumAllowed"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "aiValue": { "type": ["number", "null"] },
+        "maximumAllowed": { "type": ["number", "null"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

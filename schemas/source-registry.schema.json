@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/source-registry.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/source-registry.schema.json",
   "title": "Sales source registry",
   "type": "object",
   "required": ["schemaVersion", "sources"],
@@ -36,4 +36,3 @@
   },
   "additionalProperties": true
 }
-

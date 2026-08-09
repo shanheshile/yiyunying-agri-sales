@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/quote-input.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/quote-input.schema.json",
   "title": "Quotation calculation input",
   "type": "object",
   "required": ["customerId", "currency", "incoterm", "pricingMode", "profitRate", "items", "exchangeRates"],

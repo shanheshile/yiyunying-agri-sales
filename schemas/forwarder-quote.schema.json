@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/forwarder-quote.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/forwarder-quote.schema.json",
   "title": "Forwarder quote",
   "type": "object",
   "required": ["requestKey", "forwarderId", "incoterm", "destination", "currency", "charges", "capability", "observedAt"],

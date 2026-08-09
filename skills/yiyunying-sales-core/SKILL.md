@@ -15,6 +15,7 @@ selected permission-mode skill.
 - Read `references/state-queue-and-protection.md` before selecting or changing a stage, queue or public-pool state.
 - Read `references/outbound-and-channel-verification.md` before drafting or sending WhatsApp or email.
 - Read `references/crm-and-audit-ledger.md` before writing CRM or reporting counts.
+- Read `references/effectiveness-and-governance.md` only when instrumenting, evaluating or reporting AI efficiency and adoption.
 
 ## Required workflow
 
@@ -29,10 +30,13 @@ selected permission-mode skill.
 9. Write concise customer business facts to CRM, adjust the stage from verified evidence, then independently read both back.
 10. Append the verified action result to the runtime ledger and report failures separately from completed work.
 
+When an approved effectiveness study is active, append its minimal anonymous
+timing/quality record after step 10. Do not load evaluation history into ordinary
+customer work or copy customer content into the measurement ledger.
+
 ## Fail closed
 
 Stop the affected action on identity ambiguity, message-direction ambiguity,
 missing readable content, stale or conflicting evidence, protected timing,
 duplicate risk, high-risk claims, failed channel verification, failed CRM
 read-back, or a stage change unsupported by customer evidence.
-

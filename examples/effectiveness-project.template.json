@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0",
+  "project": {
+    "id": "set-a-stable-project-id",
+    "name": "Set the real project name",
+    "productionStartDate": null,
+    "asOfDate": null,
+    "annualTaskVolume": null,
+    "standardHourlyCostCny": null,
+    "ownerRole": null,
+    "artifacts": []
+  },
+  "scope": {
+    "teamAdopted": false,
+    "crossRoleOrDepartment": false
+  },
+  "metrics": {
+    "coreQuality": {
+      "name": "Set one measurable core quality metric",
+      "direction": "higher-is-better",
+      "baselineValue": null,
+      "aiValue": null,
+      "allowedDegradation": 0
+    },
+    "risk": {
+      "name": "Set one measurable risk metric",
+      "aiValue": null,
+      "maximumAllowed": null
+    }
+  },
+  "economics": {
+    "annualDirectCostSavingsCny": null,
+    "annualAddedGrossProfitCny": null,
+    "annualAiToolApiProcurementMaintenanceCostCny": null,
+    "annualBusinessErrorLossCny": null
+  },
+  "awardPolicy": {
+    "tiers": [],
+    "secondTranche": {
+      "eligibleTierKeys": [],
+      "minStableRunDays": null,
+      "minActiveUserRetentionPct": null
+    }
+  },
+  "userValidations": [],
+  "sustainabilityReview": {
+    "stableRunDays": null,
+    "activeUserRetentionPct": null,
+    "qualityIncidentCount": null,
+    "businessErrorCount": null,
+    "customerComplaintCount": null,
+    "evidenceConsistencyConfirmed": null,
+    "maintainerAssigned": null,
+    "dataSecurityCompliant": null
+  }
+}

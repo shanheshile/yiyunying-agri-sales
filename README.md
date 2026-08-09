@@ -73,6 +73,24 @@ python scripts/build_prompt_pack.py --variant ai3-team --task followup --platfor
 
 See `portable/README.md`. Credentials are referenced through environment,
 browser/session or OS credential stores and are never embedded in a prompt pack.
+The generic template contains no sample service domain; each deployment must bind
+its exact URL through a configured endpoint reference.
+
+## AI effectiveness evidence
+
+The suite can measure real operational use without putting customer or account
+data in the measurement ledger. Record each task with anonymous IDs, full net
+time components, quality/risk flags, artifact version and a SHA-256 receipt of
+separately retained evidence. Then generate an award-readiness report:
+
+```powershell
+python scripts/effectiveness_record.py --help
+python scripts/effectiveness_report.py --project runtime/effectiveness/project.json --runs runtime/effectiveness/runs.jsonl --format markdown --output runtime/effectiveness/report.md
+```
+
+See `docs/AI-EFFECTIVENESS-EVIDENCE.md`. Missing baselines, user validation,
+costs or quality evidence remain unknown; the tools never turn them into zero or
+an unsupported result.
 
 ## Public/private boundary
 

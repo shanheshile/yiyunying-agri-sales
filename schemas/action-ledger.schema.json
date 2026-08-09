@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/action-ledger.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/action-ledger.schema.json",
   "title": "Verified sales action ledger",
   "type": "object",
   "required": ["runId", "cursor", "actions"],
@@ -28,4 +28,3 @@
   },
   "additionalProperties": true
 }
-

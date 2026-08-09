@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0 - 2026-08-09
+
+- Removed placeholder service domains from every public configuration file.
+- Generic deployments must bind exact endpoints through environment or equivalent secure references; JSON Schema IDs now use the real public repository URLs.
+- Added privacy-minimized real-task recording with evidence-receipt hashes.
+- Added deterministic net-efficiency, annual-value, quality/risk, adoption and award-readiness reporting.
+- Added configurable staged-award and sustainability gates without exposing organization-specific policy or inventing missing evidence.
+- Added a measurement-only portable module so routine sales prompts do not load historical metrics.
+
 ## 1.2.0 - 2026-08-09
 
 - Added compact prompt packs for ChatGPT, Claude, Gemini and generic AI platforms.

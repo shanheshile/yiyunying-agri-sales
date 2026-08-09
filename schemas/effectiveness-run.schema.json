@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Effectiveness Run",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "occurredAt", "taskType", "pseudonymousActorId", "realBusiness", "verificationStatus", "timingMinutes", "qualityPass", "riskIncident", "dataSecurityIncident", "artifactVersion"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "runId": { "type": "string", "minLength": 8 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "taskType": { "type": "string", "minLength": 1 },
+    "pseudonymousActorId": { "type": "string", "minLength": 1 },
+    "realBusiness": { "type": "boolean" },
+    "verificationStatus": { "enum": ["verified", "pending", "rejected"] },
+    "timingMinutes": {
+      "type": "object",
+      "required": ["baselineTotal", "aiExecution", "inputPreparation", "humanReview", "rework", "maintenanceAllocated"],
+      "properties": {
+        "baselineTotal": { "type": "number", "minimum": 0 },
+        "aiExecution": { "type": "number", "minimum": 0 },
+        "inputPreparation": { "type": "number", "minimum": 0 },
+        "humanReview": { "type": "number", "minimum": 0 },
+        "rework": { "type": "number", "minimum": 0 },
+        "maintenanceAllocated": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "qualityPass": { "type": "boolean" },
+    "riskIncident": { "type": "boolean" },
+    "dataSecurityIncident": { "type": "boolean" },
+    "artifactVersion": { "type": "string", "minLength": 1 },
+    "evidenceReceiptHash": { "type": ["string", "null"], "pattern": "^[A-Fa-f0-9]{64}$" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "verificationStatus": { "const": "verified" } },
+        "required": ["verificationStatus"]
+      },
+      "then": {
+        "required": ["evidenceReceiptHash"],
+        "properties": { "evidenceReceiptHash": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" } }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

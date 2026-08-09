@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/product-record.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/product-record.schema.json",
   "title": "Product record",
   "type": "object",
   "required": ["id", "model", "category", "provenance"],
@@ -71,4 +71,3 @@
   },
   "additionalProperties": true
 }
-

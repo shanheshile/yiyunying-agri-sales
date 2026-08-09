@@ -10,6 +10,7 @@ Build only the modules required for the current task:
 python scripts/build_prompt_pack.py --variant agri --task followup --platform chatgpt
 python scripts/build_prompt_pack.py --variant ai3-team --task product --task quote --platform claude
 python scripts/build_prompt_pack.py --variant universal --task followup --platform gemini
+python scripts/build_prompt_pack.py --variant agri --task measurement --platform generic
 ```
 
 Use the output as system instructions, project instructions, a Gem/assistant

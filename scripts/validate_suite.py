@@ -24,6 +24,7 @@ PUBLIC_FORBIDDEN = {
     "Windows user path": re.compile(r"(?i)C:\\Users\\(Administrator|ADMINI~1)\\"),
     "private supplier price override": re.compile(r"鲁源|魔亨|58[, ]?500|49[, ]?800|37[, ]?500"),
 }
+PLACEHOLDER_URL = re.compile(r"https?://(?:[^/]*\.)?example\.(?:com|invalid)(?:/|$)", re.IGNORECASE)
 
 
 def read_text(path: Path) -> str:
@@ -93,6 +94,8 @@ def scan_tree(root: Path, public: bool, errors: list[str]) -> None:
             if pattern.search(text):
                 errors.append(f"{label} found in {path.relative_to(root)}")
         if public and path.resolve() != Path(__file__).resolve():
+            if PLACEHOLDER_URL.search(text):
+                errors.append(f"placeholder URL found in {path.relative_to(root)}")
             for label, pattern in PUBLIC_FORBIDDEN.items():
                 if pattern.search(text):
                     errors.append(f"public boundary violation ({label}) in {path.relative_to(root)}")
@@ -157,6 +160,19 @@ def main() -> int:
     for credential_file in ("schemas/credential-bindings.schema.json", "config/credential-bindings.example.json"):
         if not (root / credential_file).is_file():
             errors.append(f"missing credential component: {credential_file}")
+    effectiveness_files = (
+        "docs/AI-EFFECTIVENESS-EVIDENCE.md",
+        "examples/effectiveness-project.template.json",
+        "schemas/effectiveness-project.schema.json",
+        "schemas/effectiveness-run.schema.json",
+        "scripts/effectiveness_record.py",
+        "scripts/effectiveness_report.py",
+        "portable/tasks/measurement.md",
+        "skills/yiyunying-sales-core/references/effectiveness-and-governance.md",
+    )
+    for relative in effectiveness_files:
+        if not (root / relative).is_file():
+            errors.append(f"missing effectiveness evidence component: {relative}")
 
     if errors:
         print("Validation failed:")

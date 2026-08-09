@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/activation-receipt.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/activation-receipt.schema.json",
   "title": "Automation activation receipt",
   "type": "object",
   "required": ["authorizedBy", "effectiveFrom", "effectiveUntil", "accounts", "crmOwner", "channels", "customerScope", "limits", "excludedActions", "stopInstruction"],
@@ -20,4 +20,3 @@
   },
   "additionalProperties": true
 }
-

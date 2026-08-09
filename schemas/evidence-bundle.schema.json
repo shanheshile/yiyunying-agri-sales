@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/evidence-bundle.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/evidence-bundle.schema.json",
   "title": "Customer evidence bundle",
   "type": "object",
   "required": ["customer", "observedAt", "sources"],
@@ -46,4 +46,3 @@
   },
   "additionalProperties": true
 }
-

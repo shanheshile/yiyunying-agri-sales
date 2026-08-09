@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/pi-input.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/pi-input.schema.json",
   "title": "Proforma invoice input",
   "type": "object",
   "required": ["seller", "buyer", "piNumber", "issueDate", "currency", "incoterm", "destination", "items", "paymentTerms", "bank", "validity", "humanConfirmationRequired"],
@@ -63,4 +63,3 @@
   },
   "additionalProperties": true
 }
-

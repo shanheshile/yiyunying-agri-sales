@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/yiyunying/freight-request.schema.json",
+  "$id": "https://raw.githubusercontent.com/shanheshile/yiyunying-agri-sales/main/schemas/freight-request.schema.json",
   "title": "Freight inquiry request",
   "type": "object",
   "required": ["customerId", "country", "destination", "product", "quantity", "packaging", "incoterm"],
@@ -55,4 +55,3 @@
   ],
   "additionalProperties": true
 }
-

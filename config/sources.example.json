@@ -1,10 +1,10 @@
 {
   "schemaVersion": "1.0",
-  "profile": "generic-example",
+  "profile": "generic-template",
   "sources": {
     "crm": {
       "type": "connector-or-browser",
-      "baseUrl": "https://crm.example.com/",
+      "location": "${CRM_BASE_URL}",
       "customerIdField": "customerId",
       "credentials": "platform-credential-store"
     },
@@ -45,4 +45,3 @@
     }
   }
 }
-
