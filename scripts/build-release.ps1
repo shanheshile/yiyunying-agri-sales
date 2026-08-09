@@ -36,7 +36,9 @@ Get-ChildItem -LiteralPath $stage -Recurse -Directory -Filter '__pycache__' |
         }
         Remove-Item -LiteralPath $candidate -Recurse -Force
     }
-Get-ChildItem -LiteralPath $stage -Recurse -File -Include '*.pyc', '*.pyo' | Remove-Item -Force
+Get-ChildItem -LiteralPath $stage -Recurse -File |
+    Where-Object { $_.Extension -in @('.pyc', '.pyo') } |
+    Remove-Item -Force
 
 $zip = Join-Path $output "yiyunying-agri-sales-$version.zip"
 Compress-Archive -LiteralPath $stage -DestinationPath $zip -CompressionLevel Optimal
