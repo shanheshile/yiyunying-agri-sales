@@ -1,6 +1,6 @@
 ---
 name: yiyunying-trade-quote-pi
-description: Deterministic agricultural machinery quotation, freight and PI control for EXW, FCA, FOB, CFR, CNF, CIF, DAP, DDU and DDP. Use when a customer asks for price, delivery, freight, customs, landed cost, a formal quotation, PI, payment terms, or when comparing forwarder replies and validating product/currency/profit/packing data.
+description: Deterministic export quotation, freight and PI control for EXW, FCA, FOB, CFR, CNF, CIF, DAP, DDU and DDP. Use when a customer asks for price, delivery, freight, customs, landed cost, a formal quotation, PI, payment terms, or when comparing forwarder replies and validating product/currency/profit/packing data.
 ---
 
 # Yiyunying Trade Quote And PI
@@ -23,4 +23,3 @@ status. Keep every external formal amount, PI and payment instruction in
 
 Never expose internal cost, profit, forwarder price or supplier identity to the
 customer. Never invent a tax, duty, certificate, DDP boundary or delivery promise.
-

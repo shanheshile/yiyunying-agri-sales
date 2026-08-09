@@ -1,0 +1,7 @@
+interface:
+  display_name: "Yiyunying Sales Universal"
+  short_description: "Run a configurable cross-industry sales workflow."
+  brand_color: "#334155"
+  default_prompt: "Use $yiyunying-sales-universal to audit the available sales evidence and prepare the next permitted action."
+policy:
+  allow_implicit_invocation: true

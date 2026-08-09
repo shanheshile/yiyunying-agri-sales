@@ -131,6 +131,8 @@ def main() -> int:
         "yiyunying-auto-authorized",
         "yiyunying-agri-sales-distribution",
         "yiyunying-agri-auto-follow-generic",
+        "yiyunying-agri-ai3-team",
+        "yiyunying-sales-universal",
     ]
     for name in required:
         if not (root / "skills" / name / "SKILL.md").is_file():

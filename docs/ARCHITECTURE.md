@@ -11,6 +11,13 @@ The distribution orchestrator composes these concerns. The automation controller
 does not contain product facts or customer data and cannot grant itself
 permission.
 
+## Deployment entry points
+
+- `yiyunying-agri-sales-distribution`: identity-free agricultural group distribution.
+- `yiyunying-agri-ai3-team`: non-personal AI3 stage/report defaults over the same agricultural core.
+- `yiyunying-sales-universal`: all-company cross-industry entry point; requires a deployment product adapter.
+- Private personal deployments add their own profile, source/price overlays and automation controller without copying the public references.
+
 ## Source precedence
 
 For customer intent: direct current inbound message, verified CRM record, prior
@@ -29,4 +36,3 @@ resolved.
 Generated releases, action ledgers, browser state, customer records and
 credentials are excluded from Git. Runtime state must be stored outside the
 skill source and keyed by stable customer and action IDs.
-

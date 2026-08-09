@@ -16,6 +16,8 @@ and browser session data.
 | `yiyunying-auto-authorized` | Explicit, scoped, revocable automation permission mode |
 | `yiyunying-agri-sales-distribution` | Generic end-to-end agricultural sales orchestrator |
 | `yiyunying-agri-auto-follow-generic` | Generic scheduled-run controller; paused and dry-run by default |
+| `yiyunying-agri-ai3-team` | Non-personal AI3 team defaults over the agricultural distribution core |
+| `yiyunying-sales-universal` | All-company, cross-industry orchestrator with deployment-supplied product adapters |
 
 ## Safety defaults
 
@@ -65,4 +67,3 @@ Use this repository for reusable workflow and schemas. Keep personal identity,
 live customer data, internal prices, supplier names, private freight contacts,
 account-specific URLs and runtime memories in a separate private repository.
 See `docs/DATA-GOVERNANCE.md`.
-

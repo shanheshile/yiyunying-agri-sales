@@ -1,0 +1,7 @@
+interface:
+  display_name: "Agricultural AI3 Team"
+  short_description: "Run the non-personal AI3 agricultural sales workflow."
+  brand_color: "#0F766E"
+  default_prompt: "Use $yiyunying-agri-ai3-team to audit this customer and complete the next permitted team sales action."
+policy:
+  allow_implicit_invocation: true
