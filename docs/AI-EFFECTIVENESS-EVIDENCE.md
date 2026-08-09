@@ -3,8 +3,8 @@
 ## Purpose
 
 This standard turns an AI workflow into auditable operational evidence. It is
-designed for internal improvement reviews and award programs that require real
-use, net efficiency, quality, adoption, value, security and repeatability.
+designed for internal improvement and human-reviewed applications that require
+real use, net efficiency, quality, adoption, value, security and repeatability.
 
 ## Required sequence
 
@@ -70,7 +70,7 @@ work, populate `annualTaskVolumeByType`; the tool weights each type by its own
 verified average and annual volume. Otherwise annual saved hours and value remain
 unknown rather than applying a distorted task mix.
 
-Do not treat missing monetary inputs as zero for an award gate.
+Do not treat missing monetary inputs as zero in the evidence report.
 
 ## Quality, risk and sustainability
 
@@ -79,17 +79,13 @@ Record direction, baseline/current values and allowed degradation or maximum
 risk. A material quality decline, excess error/rework/complaint rate, security
 incident, inconsistent evidence or missing accountable owner blocks eligibility.
 
-For staged awards, run a 90-day sustainability review. Require maintained usage,
-at least 50% active-user retention, stable quality, no disqualifying incident,
-consistent data, assigned maintainer and data-security compliance.
+For later sustainability review, record maintained usage, active-user retention,
+stable quality, incidents, evidence consistency, assigned maintainer and
+data-security compliance. The reviewer applies the current policy.
 
-## Deployment policy boundary
-
-Configure organization-specific award tiers and staged-payment thresholds in
-the private `awardPolicy` section of `project.json`. The public engine does not
-embed internal award names, prize amounts or thresholds. This keeps the reusable
-calculation logic public while internal policy remains in the authorized private
-deployment.
+For repetitive work, preserve evidence from repeated cross-validation rather
+than relying on one successful sample. A sustainability review must also record
+whether usage frequency remains at the required operating level.
 
 ## Tool
 
@@ -101,9 +97,11 @@ python scripts/effectiveness_report.py `
   --output runtime/effectiveness/report.md
 ```
 
-The award duration uses the smaller of the declared production period and the
+The reported duration uses the smaller of the declared production period and the
 observed span of verified real-business runs. This prevents a manually entered
 start date from overstating actual usage.
 
 The generated report is an evidence summary, not proof by itself. Retain source
 time studies, user validation and business-system evidence for human review.
+The tool does not determine an award, tier or payout. Authorized reviewers apply
+the current notice to the source evidence and retain final responsibility.

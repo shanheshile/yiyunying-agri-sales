@@ -13,7 +13,8 @@
   },
   "scope": {
     "teamAdopted": false,
-    "crossRoleOrDepartment": false
+    "crossRoleOrDepartment": false,
+    "repetitiveWork": false
   },
   "metrics": {
     "coreQuality": {
@@ -35,18 +36,12 @@
     "annualAiToolApiProcurementMaintenanceCostCny": null,
     "annualBusinessErrorLossCny": null
   },
-  "awardPolicy": {
-    "tiers": [],
-    "secondTranche": {
-      "eligibleTierKeys": [],
-      "minStableRunDays": null,
-      "minActiveUserRetentionPct": null
-    }
-  },
   "userValidations": [],
   "sustainabilityReview": {
     "stableRunDays": null,
     "activeUserRetentionPct": null,
+    "usageFrequencyMaintained": null,
+    "repeatRoleCrossValidationPassed": null,
     "qualityIncidentCount": null,
     "businessErrorCount": null,
     "customerComplaintCount": null,

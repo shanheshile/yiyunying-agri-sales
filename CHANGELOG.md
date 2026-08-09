@@ -5,9 +5,9 @@
 - Removed placeholder service domains from every public configuration file.
 - Generic deployments must bind exact endpoints through environment or equivalent secure references; JSON Schema IDs now use the real public repository URLs.
 - Added privacy-minimized real-task recording with evidence-receipt hashes.
-- Added deterministic net-efficiency, annual-value, quality/risk, adoption and award-readiness reporting.
-- Added configurable staged-award and sustainability gates without exposing organization-specific policy or inventing missing evidence.
-- Added distinct-receipt deduplication, validated-user counting and task-type-weighted annualization.
+- Added deterministic net-efficiency, annual-value, quality/risk, adoption and sustainability evidence reporting for human review.
+- Kept award, tier and payout decisions outside the tool; reviewers apply their current internal policy.
+- Added distinct-receipt deduplication, validated-user counting, task-type-weighted annualization and human-only review boundaries.
 - Added a measurement-only portable module so routine sales prompts do not load historical metrics.
 
 ## 1.2.0 - 2026-08-09

@@ -160,6 +160,12 @@ def main() -> int:
     for credential_file in ("schemas/credential-bindings.schema.json", "config/credential-bindings.example.json"):
         if not (root / credential_file).is_file():
             errors.append(f"missing credential component: {credential_file}")
+    source_config = root / "config" / "sources.example.json"
+    if source_config.is_file():
+        source_payload = json.loads(read_text(source_config))
+        crm_source = source_payload.get("sources", {}).get("crm", {})
+        if crm_source.get("location") != "${CRM_BASE_URL}" or "baseUrl" in crm_source:
+            errors.append("generic CRM must use the exact runtime binding ${CRM_BASE_URL}, never a fabricated baseUrl")
     effectiveness_files = (
         "docs/AI-EFFECTIVENESS-EVIDENCE.md",
         "examples/effectiveness-project.template.json",

@@ -45,7 +45,9 @@ limit, data security fails, evidence is inconsistent or responsibility is unclea
 
 ## Sustainability
 
-For awards or internal rollout, preserve maintainer ownership, active-user count,
+For external review or internal rollout, preserve maintainer ownership, active-user count,
 frequency, quality and incident evidence. Recheck after 90 days. A user decline
 over 50%, long-term disuse, quality/business/customer incident, data mismatch,
 missing maintainer or security/compliance failure blocks sustained-success claims.
+Confirm that usage frequency is maintained. Repetitive roles also require
+multiple cross-validations; one successful sample is insufficient.

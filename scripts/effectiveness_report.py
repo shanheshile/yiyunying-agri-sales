@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Calculate net AI efficiency, value, quality gates and award readiness."""
+"""Calculate auditable AI efficiency, value, quality and sustainability evidence."""
 
 from __future__ import annotations
 
@@ -261,6 +261,7 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
     validated_actors = actors & validated_actor_ids
     artifacts = [row for row in project_info.get("artifacts", []) if row.get("reusable") is True and row.get("version")]
     sustainability = project.get("sustainabilityReview", {})
+    scope = project.get("scope", {})
 
     common_reasons = []
     if not verified:
@@ -283,55 +284,8 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
         common_reasons.append("维护责任尚未确认")
     if sustainability.get("dataSecurityCompliant") is not True:
         common_reasons.append("数据安全合规尚未确认")
-
-    award_rows = []
-    scope = project.get("scope", {})
-    award_policy = project.get("awardPolicy", {})
-    for award in award_policy.get("tiers", []):
-        reasons = list(common_reasons)
-        minimum_days = numeric(award.get("minRealRunDays"))
-        minimum_tasks = numeric(award.get("minVerifiedTasks"))
-        minimum_efficiency = numeric(award.get("minNetEfficiencyPct"))
-        minimum_users = numeric(award.get("minUniqueUsers"))
-        minimum_value = numeric(award.get("minAnnualNetValueCny"))
-        if minimum_days is None or duration_days is None or duration_days < minimum_days:
-            reasons.append(f"真实运行需达到 {value(minimum_days, ' 天')}")
-        if minimum_tasks is None or len(verified) < minimum_tasks:
-            reasons.append(f"已核验真实任务需达到 {value(minimum_tasks, ' 次')}")
-        if minimum_efficiency is None or efficiency is None or efficiency < minimum_efficiency:
-            reasons.append(f"净提效需达到 {value(minimum_efficiency, '%')}")
-        adoption_rule = award.get("adoptionRule")
-        user_requirement_met = minimum_users is not None and len(validated_actors) >= minimum_users
-        if adoption_rule == "users" and not user_requirement_met:
-            reasons.append(f"实际使用者需达到 {value(minimum_users, ' 人')}")
-        elif adoption_rule == "team-or-users" and not (scope.get("teamAdopted") is True or user_requirement_met):
-            reasons.append(f"需一个小组采用或实际使用者达到 {value(minimum_users, ' 人')}")
-        elif adoption_rule == "cross-role-or-users" and not (scope.get("crossRoleOrDepartment") is True or user_requirement_met):
-            reasons.append(f"需跨岗位/跨部门采用或实际使用者达到 {value(minimum_users, ' 人')}")
-        elif adoption_rule not in {"none", "users", "team-or-users", "cross-role-or-users"}:
-            reasons.append("采用范围规则无效")
-        if minimum_value is not None and (annual_value is None or annual_value < minimum_value):
-            reasons.append(f"年度净价值需有完整证据且达到 {value(minimum_value, ' CNY')}")
-        award_rows.append({"key": award["key"], "label": award["label"], "eligible": not reasons, "reasons": reasons})
-
-    eligible = [row for row in award_rows if row["eligible"]]
-    recommended = eligible[-1] if eligible else None
-    tranche_policy = award_policy.get("secondTranche", {})
-    stable_days = numeric(sustainability.get("stableRunDays"))
-    retention = numeric(sustainability.get("activeUserRetentionPct"))
-    minimum_stable_days = numeric(tranche_policy.get("minStableRunDays"))
-    minimum_retention = numeric(tranche_policy.get("minActiveUserRetentionPct"))
-    incident_keys = ("qualityIncidentCount", "businessErrorCount", "customerComplaintCount")
-    incidents_known_zero = all(numeric(sustainability.get(key)) == 0 for key in incident_keys)
-    second_tranche_conditions = {
-        "stableRunDuration": minimum_stable_days is not None and stable_days is not None and stable_days >= minimum_stable_days,
-        "activeUserRetention": minimum_retention is not None and retention is not None and retention >= minimum_retention,
-        "noQualityBusinessOrComplaintIncident": incidents_known_zero,
-        "evidenceConsistent": sustainability.get("evidenceConsistencyConfirmed") is True,
-        "maintainerAssigned": sustainability.get("maintainerAssigned") is True,
-        "dataSecurityCompliant": sustainability.get("dataSecurityCompliant") is True and security_incidents == 0,
-        "qualityAndRiskStillPass": quality_ok is True and risk_ok is True,
-    }
+    if scope.get("repetitiveWork") is True and sustainability.get("repeatRoleCrossValidationPassed") is not True:
+        common_reasons.append("重复性岗位的多次交叉验证尚未通过")
 
     return {
         "projectId": project_info.get("id"),
@@ -372,13 +326,10 @@ def evaluate(project: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, A
             "verifiedRunRiskIncidentRatePct": round(risk_incidents / len(verified) * 100, 4) if verified else None,
             "dataSecurityIncidentCount": security_incidents,
         },
-        "awardReadiness": award_rows,
-        "recommendedAward": recommended["label"] if recommended else None,
-        "secondTranche": {
-            "applicable": recommended is not None and recommended["key"] in set(tranche_policy.get("eligibleTierKeys", [])),
-            "ready": all(second_tranche_conditions.values()),
-            "conditions": second_tranche_conditions,
-        },
+        "scope": scope,
+        "sustainabilityReview": sustainability,
+        "evidenceGaps": common_reasons,
+        "humanReviewRequired": True,
     }
 
 
@@ -390,11 +341,20 @@ def value(value: Any, suffix: str = "") -> str:
     return f"{value}{suffix}"
 
 
+def truth(value: Any) -> str:
+    if value is True:
+        return "是"
+    if value is False:
+        return "否"
+    return "未核验"
+
+
 def markdown(report: dict[str, Any]) -> str:
     evidence = report["evidence"]
     timing = report["time"]
     economics = report["value"]
     quality = report["qualityAndRisk"]
+    sustainability = report["sustainabilityReview"]
     lines = [
         f"# {report.get('projectName') or 'AI提效项目'} - 提效证据报告",
         "",
@@ -411,7 +371,6 @@ def markdown(report: dict[str, Any]) -> str:
         f"| 净节省时间 | {value(timing['totalNetSavedMinutes'], ' 分钟')} |",
         f"| 净提效比例 | {value(timing['netEfficiencyPct'], '%')} |",
         f"| 年度净价值 | {value(economics['annualNetValueCny'], ' CNY')} |",
-        f"| 当前最高满足奖项 | {report.get('recommendedAward') or '暂未满足'} |",
         "",
         "## 质量与风险",
         "",
@@ -421,27 +380,31 @@ def markdown(report: dict[str, Any]) -> str:
         f"- 已核验任务风险事件率：{value(quality['verifiedRunRiskIncidentRatePct'], '%')}。",
         f"- 数据安全事件：{quality['dataSecurityIncidentCount']} 次。",
         "",
-        "## 奖项门槛",
+        "## 证据完整性",
         "",
-        "| 奖项 | 是否满足 | 仍缺证据/条件 |",
-        "| --- | --- | --- |",
     ]
-    for row in report["awardReadiness"]:
-        reasons = "-" if row["eligible"] else "；".join(row["reasons"])
-        lines.append(f"| {row['label']} | {'是' if row['eligible'] else '否'} | {reasons} |")
-    tranche = report["secondTranche"]
+    if report["evidenceGaps"]:
+        lines.extend(f"- {reason}。" for reason in report["evidenceGaps"])
+    else:
+        lines.append("- 汇总字段未发现缺口；源材料仍须人工核验。")
     lines.extend([
         "",
-        "## 90天持续运行复核",
+        "## 持续运行与协同记录",
         "",
-        f"- 是否适用：{'是' if tranche['applicable'] else '否'}。",
-        f"- 当前是否满足后续兑现条件：{'是' if tranche['ready'] else '否'}。",
+        f"- 稳定运行天数：{value(sustainability.get('stableRunDays'), ' 天')}。",
+        f"- 活跃使用者留存率：{value(sustainability.get('activeUserRetentionPct'), '%')}。",
+        f"- 使用频率是否维持：{truth(sustainability.get('usageFrequencyMaintained'))}。",
+        f"- 重复性岗位交叉验证：{truth(sustainability.get('repeatRoleCrossValidationPassed'))}。",
+        f"- 质量事故：{value(sustainability.get('qualityIncidentCount'), ' 次')}。",
+        f"- 业务错误：{value(sustainability.get('businessErrorCount'), ' 次')}。",
+        f"- 客户投诉：{value(sustainability.get('customerComplaintCount'), ' 次')}。",
+        f"- 数据一致性确认：{truth(sustainability.get('evidenceConsistencyConfirmed'))}。",
+        f"- 维护责任确认：{truth(sustainability.get('maintainerAssigned'))}。",
+        f"- 数据安全合规确认：{truth(sustainability.get('dataSecurityCompliant'))}。",
     ])
-    for key, passed in tranche["conditions"].items():
-        lines.append(f"- {key}: {'通过' if passed else '未通过/未核验'}")
     lines.extend([
         "",
-        "> 本报告只汇总匿名、已核验数据。源时间研究、使用者确认和业务系统证据仍须由实际经办人、审核人复核。",
+        "> 本报告只整理证据，不判断奖项、档位或奖金兑现。评审人员须按现行通知核查源时间研究、使用者确认和业务系统证据。",
         "",
     ])
     return "\n".join(lines)

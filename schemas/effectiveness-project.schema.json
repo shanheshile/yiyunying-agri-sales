@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "AI Effectiveness Project",
   "type": "object",
-  "required": ["schemaVersion", "project", "scope", "metrics", "economics", "awardPolicy", "userValidations", "sustainabilityReview"],
+  "required": ["schemaVersion", "project", "scope", "metrics", "economics", "userValidations", "sustainabilityReview"],
   "properties": {
     "schemaVersion": { "const": "1.0" },
     "project": {
@@ -38,10 +38,11 @@
     },
     "scope": {
       "type": "object",
-      "required": ["teamAdopted", "crossRoleOrDepartment"],
+      "required": ["teamAdopted", "crossRoleOrDepartment", "repetitiveWork"],
       "properties": {
         "teamAdopted": { "type": "boolean" },
-        "crossRoleOrDepartment": { "type": "boolean" }
+        "crossRoleOrDepartment": { "type": "boolean" },
+        "repetitiveWork": { "type": "boolean" }
       },
       "additionalProperties": false
     },
@@ -65,41 +66,6 @@
       },
       "additionalProperties": false
     },
-    "awardPolicy": {
-      "type": "object",
-      "required": ["tiers", "secondTranche"],
-      "properties": {
-        "tiers": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["key", "label", "minRealRunDays", "minVerifiedTasks", "minNetEfficiencyPct", "minUniqueUsers", "adoptionRule", "minAnnualNetValueCny"],
-            "properties": {
-              "key": { "type": "string", "minLength": 1 },
-              "label": { "type": "string", "minLength": 1 },
-              "minRealRunDays": { "type": "number", "minimum": 0 },
-              "minVerifiedTasks": { "type": "number", "minimum": 0 },
-              "minNetEfficiencyPct": { "type": "number" },
-              "minUniqueUsers": { "type": ["number", "null"], "minimum": 0 },
-              "adoptionRule": { "enum": ["none", "users", "team-or-users", "cross-role-or-users"] },
-              "minAnnualNetValueCny": { "type": ["number", "null"], "minimum": 0 }
-            },
-            "additionalProperties": false
-          }
-        },
-        "secondTranche": {
-          "type": "object",
-          "required": ["eligibleTierKeys", "minStableRunDays", "minActiveUserRetentionPct"],
-          "properties": {
-            "eligibleTierKeys": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
-            "minStableRunDays": { "type": ["number", "null"], "minimum": 0 },
-            "minActiveUserRetentionPct": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
-          },
-          "additionalProperties": false
-        }
-      },
-      "additionalProperties": false
-    },
     "userValidations": {
       "type": "array",
       "items": {
@@ -116,10 +82,12 @@
     },
     "sustainabilityReview": {
       "type": "object",
-      "required": ["stableRunDays", "activeUserRetentionPct", "qualityIncidentCount", "businessErrorCount", "customerComplaintCount", "evidenceConsistencyConfirmed", "maintainerAssigned", "dataSecurityCompliant"],
+      "required": ["stableRunDays", "activeUserRetentionPct", "usageFrequencyMaintained", "repeatRoleCrossValidationPassed", "qualityIncidentCount", "businessErrorCount", "customerComplaintCount", "evidenceConsistencyConfirmed", "maintainerAssigned", "dataSecurityCompliant"],
       "properties": {
         "stableRunDays": { "type": ["number", "null"], "minimum": 0 },
         "activeUserRetentionPct": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "usageFrequencyMaintained": { "type": ["boolean", "null"] },
+        "repeatRoleCrossValidationPassed": { "type": ["boolean", "null"] },
         "qualityIncidentCount": { "type": ["integer", "null"], "minimum": 0 },
         "businessErrorCount": { "type": ["integer", "null"], "minimum": 0 },
         "customerComplaintCount": { "type": ["integer", "null"], "minimum": 0 },

@@ -140,6 +140,12 @@ class PromptPackTests(unittest.TestCase):
                 if key.endswith("Ref") and value is not None:
                     self.assertRegex(value, r"^(env|credential-manager|platform):[^\s]+$")
 
+    def test_generic_crm_uses_a_runtime_binding_not_a_fake_url(self):
+        config = json.loads((ROOT / "config" / "sources.example.json").read_text(encoding="utf-8"))
+        crm = config["sources"]["crm"]
+        self.assertEqual(crm["location"], "${CRM_BASE_URL}")
+        self.assertNotIn("baseUrl", crm)
+
     def test_measurement_is_loaded_only_when_selected(self):
         followup = prompt_pack.compose(ROOT / "portable", "agri", ["followup"], "generic", [])
         measurement = prompt_pack.compose(ROOT / "portable", "agri", ["measurement"], "generic", [])
@@ -161,7 +167,7 @@ def effectiveness_project():
             "ownerRole": "workflow owner",
             "artifacts": [{"type": "skill", "version": "1.3.0", "reusable": True}],
         },
-        "scope": {"teamAdopted": False, "crossRoleOrDepartment": False},
+        "scope": {"teamAdopted": False, "crossRoleOrDepartment": False, "repetitiveWork": True},
         "metrics": {
             "coreQuality": {
                 "name": "verified completion rate",
@@ -178,15 +184,6 @@ def effectiveness_project():
             "annualAiToolApiProcurementMaintenanceCostCny": 0,
             "annualBusinessErrorLossCny": 0,
         },
-        "awardPolicy": {
-            "tiers": [
-                {"key": "practice", "label": "Practice", "minRealRunDays": 14, "minVerifiedTasks": 10, "minNetEfficiencyPct": 15, "minUniqueUsers": None, "adoptionRule": "none", "minAnnualNetValueCny": None},
-                {"key": "third", "label": "Level 3", "minRealRunDays": 28, "minVerifiedTasks": 30, "minNetEfficiencyPct": 20, "minUniqueUsers": None, "adoptionRule": "none", "minAnnualNetValueCny": None},
-                {"key": "second", "label": "Level 2", "minRealRunDays": 42, "minVerifiedTasks": 50, "minNetEfficiencyPct": 30, "minUniqueUsers": 3, "adoptionRule": "users", "minAnnualNetValueCny": None},
-                {"key": "first", "label": "Level 1", "minRealRunDays": 56, "minVerifiedTasks": 100, "minNetEfficiencyPct": 40, "minUniqueUsers": 10, "adoptionRule": "team-or-users", "minAnnualNetValueCny": None}
-            ],
-            "secondTranche": {"eligibleTierKeys": ["second", "first"], "minStableRunDays": 90, "minActiveUserRetentionPct": 50}
-        },
         "userValidations": [
             {"pseudonymousUserId": actor, "verifiedAt": "2026-02-11", "confirmedRealUse": True, "confirmedUseful": True}
             for actor in ("actor-a", "actor-b", "actor-c")
@@ -194,6 +191,8 @@ def effectiveness_project():
         "sustainabilityReview": {
             "stableRunDays": 42,
             "activeUserRetentionPct": 100,
+            "usageFrequencyMaintained": True,
+            "repeatRoleCrossValidationPassed": True,
             "qualityIncidentCount": 0,
             "businessErrorCount": 0,
             "customerComplaintCount": 0,
@@ -231,19 +230,19 @@ def effectiveness_run(index: int):
 
 
 class EffectivenessTests(unittest.TestCase):
-    def test_net_formula_and_second_award_gate(self):
+    def test_net_formula_and_complete_evidence_summary(self):
         report = effectiveness.evaluate(effectiveness_project(), [effectiveness_run(index) for index in range(50)])
         self.assertEqual(report["time"]["averageNetSavedMinutes"], 34)
         self.assertAlmostEqual(report["time"]["netEfficiencyPct"], 56.6667)
         self.assertEqual(report["evidence"]["durationDays"], 42)
-        self.assertEqual(report["recommendedAward"], "Level 2")
+        self.assertEqual(report["evidenceGaps"], [])
+        self.assertTrue(report["humanReviewRequired"])
 
-    def test_missing_quality_evidence_blocks_award(self):
+    def test_missing_quality_is_reported_as_an_evidence_gap(self):
         project = effectiveness_project()
         project["metrics"]["coreQuality"]["aiValue"] = None
         report = effectiveness.evaluate(project, [effectiveness_run(index) for index in range(50)])
-        self.assertIsNone(report["recommendedAward"])
-        self.assertTrue(any("核心质量指标缺少" in reason for reason in report["awardReadiness"][0]["reasons"]))
+        self.assertTrue(any("核心质量指标缺少" in reason for reason in report["evidenceGaps"]))
 
     def test_personal_identifier_and_missing_receipt_are_rejected(self):
         row = effectiveness_run(1)
