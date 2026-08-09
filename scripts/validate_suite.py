@@ -164,8 +164,8 @@ def main() -> int:
     if source_config.is_file():
         source_payload = json.loads(read_text(source_config))
         crm_source = source_payload.get("sources", {}).get("crm", {})
-        if crm_source.get("location") != "${CRM_BASE_URL}" or "baseUrl" in crm_source:
-            errors.append("generic CRM must use the exact runtime binding ${CRM_BASE_URL}, never a fabricated baseUrl")
+        if crm_source.get("endpointRef") != "env:CRM_BASE_URL" or any(key in crm_source for key in ("url", "baseUrl", "location")):
+            errors.append("generic CRM must use env:CRM_BASE_URL as endpointRef, never a fabricated URL field")
     effectiveness_files = (
         "docs/AI-EFFECTIVENESS-EVIDENCE.md",
         "examples/effectiveness-project.template.json",

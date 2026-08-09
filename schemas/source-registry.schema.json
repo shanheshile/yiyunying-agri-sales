@@ -20,11 +20,22 @@
   "$defs": {
     "source": {
       "type": "object",
-      "required": ["type", "location"],
+      "required": ["type"],
+      "anyOf": [
+        { "required": ["location"] },
+        { "required": ["endpointRef"] },
+        { "required": ["pathRef"] },
+        { "required": ["channelRef"] },
+        { "required": ["binding"] }
+      ],
       "properties": {
         "id": { "type": "string" },
         "type": { "type": "string" },
         "location": { "type": "string" },
+        "endpointRef": { "type": "string", "pattern": "^(env|credential-manager|platform):[^\\s]+$" },
+        "pathRef": { "type": "string", "pattern": "^(env|credential-manager|platform):[^\\s]+$" },
+        "channelRef": { "type": "string", "pattern": "^(env|credential-manager|platform):[^\\s]+$" },
+        "binding": { "type": "string", "minLength": 1 },
         "priority": { "type": "integer" },
         "freshnessHours": { "type": ["integer", "null"], "minimum": 0 },
         "containsInternalCost": { "type": "boolean" },

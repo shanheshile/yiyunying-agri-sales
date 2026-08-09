@@ -74,7 +74,9 @@ python scripts/build_prompt_pack.py --variant ai3-team --task followup --platfor
 See `portable/README.md`. Credentials are referenced through environment,
 browser/session or OS credential stores and are never embedded in a prompt pack.
 The generic template contains no sample service domain; each deployment must bind
-its exact URL through a configured endpoint reference.
+its exact URL through a configured endpoint reference. Unknown deployment values
+use explicit `endpointRef`, `pathRef` or `channelRef` fields; only a complete,
+verified HTTPS address may be stored in a URL/location field.
 
 ## AI effectiveness evidence
 

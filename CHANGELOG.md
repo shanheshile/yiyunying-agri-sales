@@ -3,7 +3,7 @@
 ## 1.3.0 - 2026-08-09
 
 - Removed placeholder service domains from every public configuration file.
-- Generic deployments must bind exact endpoints through environment or equivalent secure references; JSON Schema IDs now use the real public repository URLs.
+- Generic deployments bind unknown endpoints through typed provider references instead of URL-looking placeholders; JSON Schema IDs use the real public repository URLs.
 - Added privacy-minimized real-task recording with evidence-receipt hashes.
 - Added deterministic net-efficiency, annual-value, quality/risk, adoption and sustainability evidence reporting for human review.
 - Kept award, tier and payout decisions outside the tool; reviewers apply their current internal policy.

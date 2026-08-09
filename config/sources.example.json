@@ -4,7 +4,7 @@
   "sources": {
     "crm": {
       "type": "connector-or-browser",
-      "location": "${CRM_BASE_URL}",
+      "endpointRef": "env:CRM_BASE_URL",
       "customerIdField": "customerId",
       "credentials": "platform-credential-store"
     },
@@ -12,7 +12,7 @@
       {
         "id": "live-product-api",
         "type": "api-or-cli",
-        "location": "${PRODUCT_CATALOG_ENDPOINT}",
+        "endpointRef": "env:PRODUCT_CATALOG_ENDPOINT",
         "priority": 100,
         "containsInternalCost": true,
         "freshnessHours": 24
@@ -20,7 +20,7 @@
       {
         "id": "approved-snapshot",
         "type": "json-file",
-        "location": "${PRODUCT_CATALOG_JSON}",
+        "pathRef": "env:PRODUCT_CATALOG_JSON",
         "priority": 60,
         "containsInternalCost": true,
         "freshnessHours": 720
@@ -28,19 +28,19 @@
     ],
     "quoteBuilder": {
       "type": "web-or-api",
-      "location": "${QUOTE_BUILDER_URL}"
+      "endpointRef": "env:QUOTE_BUILDER_URL"
     },
     "materialLibrary": [
       {
         "id": "exact-model-library",
         "type": "web-or-api",
-        "location": "${MATERIAL_LIBRARY_URL}",
+        "endpointRef": "env:MATERIAL_LIBRARY_URL",
         "supports": ["image", "video", "datasheet"]
       }
     ],
     "freight": {
       "type": "manual-or-connector",
-      "location": "${FREIGHT_CHANNEL}",
+      "channelRef": "env:FREIGHT_CHANNEL",
       "credentials": "platform-credential-store"
     }
   }

@@ -143,8 +143,22 @@ class PromptPackTests(unittest.TestCase):
     def test_generic_crm_uses_a_runtime_binding_not_a_fake_url(self):
         config = json.loads((ROOT / "config" / "sources.example.json").read_text(encoding="utf-8"))
         crm = config["sources"]["crm"]
-        self.assertEqual(crm["location"], "${CRM_BASE_URL}")
+        self.assertEqual(crm["endpointRef"], "env:CRM_BASE_URL")
         self.assertNotIn("baseUrl", crm)
+        self.assertNotIn("location", crm)
+
+    def test_generic_source_references_use_provider_prefixes(self):
+        config = json.loads((ROOT / "config" / "sources.example.json").read_text(encoding="utf-8"))
+        stack = [config]
+        while stack:
+            item = stack.pop()
+            if isinstance(item, dict):
+                for key, value in item.items():
+                    if key.endswith("Ref"):
+                        self.assertRegex(value, r"^(env|credential-manager|platform):[^\s]+$")
+                    stack.append(value)
+            elif isinstance(item, list):
+                stack.extend(item)
 
     def test_measurement_is_loaded_only_when_selected(self):
         followup = prompt_pack.compose(ROOT / "portable", "agri", ["followup"], "generic", [])
