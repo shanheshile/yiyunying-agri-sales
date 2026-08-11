@@ -179,6 +179,32 @@ def complete_evidence():
 
 
 class CustomerPreflightTests(unittest.TestCase):
+    def test_auto_skill_bundles_executable_preflight(self):
+        bundled = ROOT / "skills" / "yiyunying-agri-auto-follow-generic" / "scripts" / "customer_preflight.py"
+        canonical = ROOT / "scripts" / "customer_preflight.py"
+        self.assertTrue(bundled.is_file())
+        self.assertEqual(
+            bundled.read_text(encoding="utf-8"),
+            canonical.read_text(encoding="utf-8"),
+        )
+        payload = {
+            "customerId": "installed-auto-skill",
+            "isNew": False,
+            "backgroundResearch": {"status": "missing"},
+            "evidence": complete_evidence(),
+            "intentReviewed": True,
+            "channelVerified": True,
+        }
+        result = subprocess.run(
+            [sys.executable, str(bundled)],
+            input=json.dumps(payload),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(json.loads(result.stdout)["outboundAllowed"])
+
     def test_new_customer_without_background_is_blocked_before_contact(self):
         result = customer_preflight.evaluate({
             "customerId": "customer-new",

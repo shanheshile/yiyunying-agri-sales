@@ -18,7 +18,7 @@ identity or private data.
 8. Keep quote, freight commitment, PI, payment, certificate, tax/customs and dangerous-goods work in the confirmation queue.
 9. Verify every allowed send/write, update the ledger cursor and report exact counts and failures.
 
-Use `scripts/customer_preflight.py` when available to test the deterministic gate.
+Run the bundled `scripts/customer_preflight.py` to test the deterministic gate.
 `outboundAllowed` or `crmStageWriteAllowed` must be true before the corresponding
 action is attempted.
 

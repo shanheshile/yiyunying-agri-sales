@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.1 - 2026-08-11
+
+- Bundled the deterministic customer preflight inside the generic automatic Skill so an installed Skill remains self-contained.
+- Added an installed-shape execution test that blocks an existing customer with missing background research before outbound.
+
 ## 1.4.0 - 2026-08-11
 
 - Made one-time background research a blocking preflight for every new or existing customer before outbound, stage change, public-pool movement or handled counts.
