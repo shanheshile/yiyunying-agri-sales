@@ -108,6 +108,9 @@ def validate_automation(root: Path, errors: list[str]) -> None:
             errors.append(f"automation template is not paused: {path.relative_to(root)}")
         if "$yiyunying-agri-auto-follow-generic" not in text:
             errors.append(f"automation does not explicitly invoke its controller: {path.relative_to(root)}")
+        for required in ("every new or existing customer", "背调无信息", "read the CRM entry back"):
+            if required not in text:
+                errors.append(f"automation omits background gate '{required}': {path.relative_to(root)}")
 
 
 def main() -> int:
@@ -160,6 +163,15 @@ def main() -> int:
     for credential_file in ("schemas/credential-bindings.schema.json", "config/credential-bindings.example.json"):
         if not (root / credential_file).is_file():
             errors.append(f"missing credential component: {credential_file}")
+    preflight = root / "scripts" / "customer_preflight.py"
+    if not preflight.is_file():
+        errors.append("missing deterministic customer background preflight")
+    else:
+        auto_skill = read_text(root / "skills" / "yiyunying-agri-auto-follow-generic" / "SKILL.md")
+        core_evidence = read_text(root / "skills" / "yiyunying-sales-core" / "references" / "evidence-and-identity.md")
+        for required in ("new or existing", "背调无信息", "read"):
+            if required not in auto_skill or required not in core_evidence:
+                errors.append(f"background preflight rule is not shared by auto/core: {required}")
     source_config = root / "config" / "sources.example.json"
     if source_config.is_file():
         source_payload = json.loads(read_text(source_config))

@@ -2,7 +2,6 @@ interface:
   display_name: "Generic Agricultural Auto Follow"
   short_description: "Control an explicitly authorized, resumable sales schedule."
   brand_color: "#A16207"
-  default_prompt: "Use $yiyunying-agri-auto-follow-generic in dry-run mode unless a valid activation receipt explicitly authorizes this run."
+  default_prompt: "Use $yiyunying-agri-auto-follow-generic in dry-run mode unless a valid activation receipt authorizes this run; require a read-back-proven one-time background result for every new or existing customer before action."
 policy:
   allow_implicit_invocation: false
-

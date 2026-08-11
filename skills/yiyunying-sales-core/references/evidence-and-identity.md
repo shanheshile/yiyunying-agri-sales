@@ -37,10 +37,15 @@ thanks or system auto-reply is not a new purchase signal.
 
 ## Background research
 
-- Search CRM dynamics first. If a useful result or the exact entry `背调无信息` exists, do not repeat the background check.
-- Otherwise run one check, compare it with the exact customer and fill only verified missing fields.
+- Apply this gate to every customer, whether new or existing, before outbound, stage change or normal CRM follow-up.
+- Search CRM dynamics first. A valid prior result is either useful matched facts or the exact entry `背调无信息`; if either exists and can be read back, do not repeat the background check.
+- Otherwise open the exact CRM customer, run the configured AI background research once, wait for completion, and compare name, company, email/domain, phone, country and address with the bound customer.
+- Fill only verified missing fields. Never overwrite a stronger customer-provided or transaction-proven value with research output.
 - Similar names, unrelated companies and generic search results are not customer facts.
-- When no usable information exists, write only `背调无信息` in the correct CRM follow-up area.
+- Immediately write useful matched facts or, when no usable information exists, only `背调无信息` in the correct CRM follow-up area.
+- Read the saved result back. Until research and CRM read-back are complete, do not send, change stage, move public pool or count the customer as handled.
+- If research is unavailable, remains running, conflicts with identity or cannot be saved/read back, stop that customer and record an operational exception outside customer dynamics.
+- Use the stable idempotency key `customerId:background-research:v1`; automation memory may store only the key/status, never the customer facts.
 
 ## High-stage identity
 
@@ -48,4 +53,3 @@ For A/B3, shipping or after-sales work, verify the trade order detail itself.
 Cross-check customer, country, seller entity, store, exact product/configuration,
 quote number, contract number, order number, trade order number, PI, payment and
 shipping reference. A filename or matching country alone cannot bind an order.
-

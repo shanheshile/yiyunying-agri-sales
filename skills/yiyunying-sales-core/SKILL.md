@@ -20,7 +20,7 @@ selected permission-mode skill.
 ## Required workflow
 
 1. Bind the exact customer by stable CRM ID. Without one, require exact normalized phone or email plus a corroborating field.
-2. Check whether a valid background-research result already exists. Run it at most once and record it before normal follow-up.
+2. For every new or existing customer, check CRM dynamics for a valid one-time background result. If absent, run it once, match the result to the exact customer, record usable facts or exactly `背调无信息`, and read the CRM entry back before any outbound or stage action.
 3. Read complete inquiry, contact, CRM dynamics, WhatsApp, email, quote, PI, order, payment and shipping evidence that is relevant to the action.
 4. Resolve message direction, sender, language, country, latest intent, confirmed product facts, current blocker and time protection.
 5. Classify the action as `eligible`, `protected`, `blocked`, `confirmation-required`, or `ready-for-public-pool`.
@@ -37,6 +37,6 @@ customer work or copy customer content into the measurement ledger.
 ## Fail closed
 
 Stop the affected action on identity ambiguity, message-direction ambiguity,
-missing readable content, stale or conflicting evidence, protected timing,
+missing/read-back-failed background research, missing readable content, stale or conflicting evidence, protected timing,
 duplicate risk, high-risk claims, failed channel verification, failed CRM
 read-back, or a stage change unsupported by customer evidence.
