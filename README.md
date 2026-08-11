@@ -26,6 +26,8 @@ and browser session data.
 - Formal prices, PI, payment details, tax statements, certificates and freight commitments require human confirmation.
 - A click is not a successful send or write. Every action needs channel or CRM read-back evidence.
 - Explicit refusal is different from silence, hesitation, price concern or a future-contact date.
+- Every new or existing customer must have one read-back-proven background result before outbound, stage or public-pool work; missing research is completed once and recorded as matched facts or exactly `背调无信息`.
+- The automatic Skill bundles its deterministic preflight script, so this gate remains executable after standalone installation.
 
 ## Configure
 

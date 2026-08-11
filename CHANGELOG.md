@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.1 - 2026-08-11
+
+- Bundled the deterministic customer preflight inside the generic automatic Skill so an installed Skill remains self-contained.
+- Added an installed-shape execution test that blocks an existing customer with missing background research before outbound.
+
+## 1.4.0 - 2026-08-11
+
+- Made one-time background research a blocking preflight for every new or existing customer before outbound, stage change, public-pool movement or handled counts.
+- Required exact-customer identity matching, immediate CRM recording and successful read-back of useful findings or exactly `背调无信息`.
+- Added a deterministic customer preflight tool and scenario tests for new, existing, no-information, identity-conflict and incomplete-evidence paths.
+- Updated generic automation, AI3 team, portable prompts and validation so the gate cannot be skipped by a deployment variant.
+
 ## 1.3.0 - 2026-08-09
 
 - Removed placeholder service domains from every public configuration file.

@@ -16,7 +16,7 @@ values and read the saved stage back before claiming success.
 ## Operating defaults
 
 - Review new inbound purchase questions and F inquiries before proactive follow-up.
-- Check whether one-time background research is already recorded. If not, run it once and immediately record only usable findings or `背调无信息`.
+- For every new or existing customer, check whether one-time background research is already recorded. If absent, run it once, verify identity, immediately record only usable findings or exactly `背调无信息`, and read it back before contact or stage change.
 - Read inquiry allocation details, contacts, CRM dynamics, WhatsApp, email, quotes and orders before contact.
 - Address customers by verified contact name, never by an internal remark label.
 - Use one exact customer at a time; apply five-day duplicate-contact protection unless a new inbound message overrides it.

@@ -26,6 +26,7 @@ pi = load_module("pi_lint", ROOT / "scripts" / "pi_lint.py")
 catalog = load_module("catalog_query", ROOT / "scripts" / "catalog_query.py")
 prompt_pack = load_module("build_prompt_pack", ROOT / "scripts" / "build_prompt_pack.py")
 effectiveness = load_module("effectiveness_report", ROOT / "scripts" / "effectiveness_report.py")
+customer_preflight = load_module("customer_preflight", ROOT / "scripts" / "customer_preflight.py")
 
 
 class QuoteTests(unittest.TestCase):
@@ -165,6 +166,122 @@ class PromptPackTests(unittest.TestCase):
         measurement = prompt_pack.compose(ROOT / "portable", "agri", ["measurement"], "generic", [])
         self.assertNotIn("Effectiveness Measurement Task", followup)
         self.assertIn("Effectiveness Measurement Task", measurement)
+
+
+def complete_evidence():
+    return {
+        "contact": True,
+        "inquiry": True,
+        "crmDynamics": True,
+        "whatsapp": True,
+        "recentEmail": True,
+    }
+
+
+class CustomerPreflightTests(unittest.TestCase):
+    def test_auto_skill_bundles_executable_preflight(self):
+        bundled = ROOT / "skills" / "yiyunying-agri-auto-follow-generic" / "scripts" / "customer_preflight.py"
+        canonical = ROOT / "scripts" / "customer_preflight.py"
+        self.assertTrue(bundled.is_file())
+        self.assertEqual(
+            bundled.read_text(encoding="utf-8"),
+            canonical.read_text(encoding="utf-8"),
+        )
+        payload = {
+            "customerId": "installed-auto-skill",
+            "isNew": False,
+            "backgroundResearch": {"status": "missing"},
+            "evidence": complete_evidence(),
+            "intentReviewed": True,
+            "channelVerified": True,
+        }
+        result = subprocess.run(
+            [sys.executable, str(bundled)],
+            input=json.dumps(payload),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(json.loads(result.stdout)["outboundAllowed"])
+
+    def test_new_customer_without_background_is_blocked_before_contact(self):
+        result = customer_preflight.evaluate({
+            "customerId": "customer-new",
+            "isNew": True,
+            "backgroundResearch": {"status": "missing"},
+            "evidence": complete_evidence(),
+            "intentReviewed": True,
+            "channelVerified": True,
+        })
+        self.assertEqual(result["customerKind"], "new")
+        self.assertFalse(result["outboundAllowed"])
+        self.assertEqual(result["actions"][:3], [
+            "RUN_BACKGROUND_RESEARCH",
+            "RECORD_BACKGROUND_RESULT",
+            "READ_BACK_BACKGROUND_RESULT",
+        ])
+
+    def test_existing_customer_without_background_uses_the_same_gate(self):
+        result = customer_preflight.evaluate({
+            "customerId": "customer-existing",
+            "isNew": False,
+            "backgroundResearch": {"status": "missing"},
+            "evidence": complete_evidence(),
+        })
+        self.assertEqual(result["customerKind"], "existing")
+        self.assertFalse(result["crmStageWriteAllowed"])
+        self.assertIn("BACKGROUND_RESEARCH_MISSING", result["blockers"])
+
+    def test_exact_no_information_marker_and_readback_close_the_gate(self):
+        result = customer_preflight.evaluate({
+            "customerId": "customer-none",
+            "backgroundResearch": {
+                "status": "no-information",
+                "marker": "背调无信息",
+                "crmReadBack": True,
+            },
+            "evidence": complete_evidence(),
+            "intentReviewed": True,
+            "channelVerified": True,
+        })
+        self.assertTrue(result["backgroundReady"])
+        self.assertTrue(result["outboundAllowed"])
+        self.assertEqual(result["blockers"], [])
+
+    def test_useful_result_with_identity_conflict_cannot_be_used(self):
+        result = customer_preflight.evaluate({
+            "customerId": "customer-conflict",
+            "backgroundResearch": {
+                "status": "usable",
+                "identityMatch": False,
+                "crmReadBack": True,
+            },
+            "evidence": complete_evidence(),
+            "intentReviewed": True,
+            "channelVerified": True,
+        })
+        self.assertFalse(result["backgroundReady"])
+        self.assertIn("RESOLVE_BACKGROUND_IDENTITY_CONFLICT", result["actions"])
+
+    def test_background_alone_does_not_replace_full_evidence_review(self):
+        evidence = complete_evidence()
+        evidence["recentEmail"] = False
+        result = customer_preflight.evaluate({
+            "customerId": "customer-evidence",
+            "backgroundResearch": {
+                "status": "usable",
+                "identityMatch": True,
+                "crmReadBack": True,
+            },
+            "evidence": evidence,
+            "intentReviewed": True,
+            "channelVerified": True,
+        })
+        self.assertTrue(result["backgroundReady"])
+        self.assertFalse(result["evidenceReady"])
+        self.assertFalse(result["outboundAllowed"])
+        self.assertIn("recentEmail", result["missingEvidence"])
 
 
 def effectiveness_project():

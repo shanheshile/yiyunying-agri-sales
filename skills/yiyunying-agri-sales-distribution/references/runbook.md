@@ -10,7 +10,7 @@ adapters, confirmation policy and report fields. Keep credentials outside Git.
 ## Per-customer run
 
 1. Bind and audit the full customer evidence.
-2. Check the one-time background-research result.
+2. Check the one-time background-research result for every new or existing customer. If absent, complete, record and read back the research before continuing.
 3. Classify latest intent, product line, real stage, protection and refusal state.
 4. Resolve the exact product/use and only the minimum missing fact.
 5. If price/material/freight/PI is needed, load the dedicated source and skill.
@@ -32,4 +32,3 @@ If a live catalog, material page, CRM, WhatsApp or email cannot be read reliably
 continue only with evidence that remains complete. Produce drafts or a blocked
 queue; do not simulate sends, writes or quotes. Authentication/session failures
 belong in the exception report, not customer CRM dynamics.
-
